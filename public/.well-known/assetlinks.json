@@ -1,0 +1,10 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.atlight",
+      "sha256_cert_fingerprints": ["A_RENSEIGNER:EMPREINTE_SHA256_DU_CERTIFICAT_DE_SIGNATURE_PLAY"]
+    }
+  }
+]

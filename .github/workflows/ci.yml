@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Traductions FR/EN cohérentes
+        run: npm run i18n:check
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run test
+      - run: npm run build
+        env:
+          NEXT_PUBLIC_API_BASE_URL: https://atlight.fr
+          NEXT_PUBLIC_WS_URL: wss://atlight.fr/ws
+          NEXT_PUBLIC_SHARE_BASE_URL: https://atlight.fr
+      - name: Navigateur Playwright
+        run: npx playwright install --with-deps chromium
+      - name: Tests E2E
+        run: npm run test:e2e -- --project=desktop-chrome
+        env:
+          NEXT_PUBLIC_API_BASE_URL: https://atlight.fr
+          NEXT_PUBLIC_WS_URL: wss://atlight.fr/ws

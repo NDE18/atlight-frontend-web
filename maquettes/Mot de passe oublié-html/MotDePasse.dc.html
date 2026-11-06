@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Atlight · Mot de passe oublié</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;0,900;1,900&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#007A59}a:hover{color:#00664B}
+.pw-page{container:page / inline-size;font-family:Roboto,system-ui,-apple-system,"Segoe UI",sans-serif;color:#212121;background:#fff;-webkit-font-smoothing:antialiased}
+.pw-page *{box-sizing:border-box}
+.pw-page :focus-visible{outline:2px solid #007A59;outline-offset:2px}
+.pw-grid{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,1fr);min-height:inherit}
+.pw-slot{display:flex;min-width:0}
+.pw-slot > *{flex:1;min-width:0;display:flex}
+.pw-pane{display:flex;flex-direction:column;align-items:center;padding:40px 24px;background:#fff;min-width:0}
+.pw-col{width:100%;max-width:440px;margin:auto 0;display:flex;flex-direction:column;gap:20px}
+.pw-mark{display:block;align-self:center;width:76px;height:76px;border-radius:18px;box-shadow:0 10px 24px rgba(0,100,74,.2);animation:pwPop .5s cubic-bezier(.2,1.4,.4,1) backwards}
+.pw-top{display:flex;flex-direction:column;gap:9px}
+.pw-steptext{font-size:14px;font-weight:500;color:#616161}
+.pw-bars{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.pw-bar{height:6px;border-radius:3px;background:#EEEEEE;overflow:hidden}
+.pw-bar span{display:block;height:100%;width:0;background:#009970;border-radius:3px;transition:width .35s cubic-bezier(.2,.8,.2,1)}
+.pw-bar.on span{width:100%}
+.pw-step{display:flex;flex-direction:column;gap:18px;animation:pwSlide .34s cubic-bezier(.2,.8,.2,1) backwards}
+.pw-title{margin:0;font-size:32px;line-height:1.12;font-weight:700;letter-spacing:-.01em}
+.pw-lead{margin:0;font-size:16px;line-height:1.5;color:#616161}
+.pw-field{display:flex;flex-direction:column;gap:7px}
+.pw-label{font-size:14px;font-weight:500;color:#616161}
+.pw-wrap{position:relative;display:flex}
+.pw-input{width:100%;height:50px;border:1px solid #BDBDBD;border-radius:10px;padding:0 14px;font:400 16px Roboto,system-ui,sans-serif;color:#212121;background:#fff;outline:none;transition:border-color .15s,box-shadow .15s}
+.pw-page .pw-input:focus-visible{outline:none}
+.pw-input::placeholder{color:#757575}
+.pw-input:hover{border-color:#9E9E9E}
+.pw-input:focus{border-color:#009970;box-shadow:0 0 0 .5px #009970,0 0 0 4px rgba(0,153,112,.13)}
+.pw-input.is-err{border-color:#C62828}
+.pw-input.eye{padding-right:52px}
+.pw-eye{position:absolute;right:3px;top:3px;width:44px;height:44px;border:0;background:transparent;border-radius:8px;color:#616161;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .15s}
+.pw-eye:hover{background:#F5F5F5}
+.pw-ic{width:20px;height:20px;fill:currentColor;flex:none;display:block}
+.pw-err{margin:0;display:flex;align-items:center;gap:5px;font-size:13px;line-height:1.35;color:#C62828;animation:pwRise .2s ease-out backwards}
+.pw-err .pw-ic{width:16px;height:16px}
+.pw-meter{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
+.pw-seg{height:6px;border-radius:3px;background:#EEEEEE;transition:background .25s}
+.pw-seg.s1{background:#E53935}
+.pw-seg.s2{background:#E08A00}
+.pw-seg.s3{background:#4CAF50}
+.pw-seg.s4{background:#009970}
+.pw-meter-row{display:flex;justify-content:space-between;gap:10px;font-size:13px;line-height:1.35;color:#616161}
+.pw-meter-row strong{color:#212121}
+.pw-rule{display:flex;align-items:center;gap:5px}
+.pw-rule.ok{color:#007A59;font-weight:500}
+.pw-rule .pw-ic{width:16px;height:16px}
+.pw-btn{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;height:54px;border-radius:12px;border:0;background:#009970;font:700 19px Roboto,system-ui,sans-serif;color:#fff;cursor:pointer;text-decoration:none;transition:background .15s,transform .12s,box-shadow .15s;box-shadow:0 8px 18px rgba(0,153,112,.24)}
+a.pw-btn,a.pw-btn:hover{color:#fff}
+.pw-btn:hover{background:#008A65;box-shadow:0 10px 22px rgba(0,153,112,.3)}
+.pw-btn:active{transform:scale(.985)}
+.pw-btn[aria-busy=true]{pointer-events:none}
+.pw-spin{width:18px;height:18px;border-radius:50%;border:2px solid rgba(255,255,255,.42);border-top-color:#fff;animation:pwSpin .7s linear infinite}
+.pw-foot{margin:0;text-align:center;font-size:15px;color:#616161}
+.pw-foot a{font-weight:700;text-decoration:none}
+.pw-foot a:hover{text-decoration:underline}
+.pw-burst{position:relative;align-self:center;width:180px;height:150px}
+.pw-done{text-align:center}
+.pw-core{position:absolute;left:52px;top:37px;width:76px;height:76px;border-radius:50%;background:#009970;color:#fff;display:flex;align-items:center;justify-content:center;animation:pwPop .5s cubic-bezier(.2,1.6,.4,1) backwards}
+.pw-core svg{width:44px;height:44px;fill:currentColor}
+.pw-spark{position:absolute;width:34px;height:34px;border-radius:50%;background:#E6F5F1;color:#00664B;display:flex;align-items:center;justify-content:center;animation:pwSpark .7s cubic-bezier(.2,1.4,.4,1) backwards}
+.pw-spark svg{width:20px;height:20px;fill:currentColor}
+@keyframes pwPop{from{opacity:0;transform:scale(.55)}to{opacity:1;transform:none}}
+@keyframes pwSlide{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:none}}
+@keyframes pwRise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes pwSpin{to{transform:rotate(360deg)}}
+@keyframes pwSpark{from{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.3)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.pw-mark,.pw-step,.pw-err,.pw-core,.pw-spark{animation:none}}
+@container page (max-width:900px){
+  .pw-grid{grid-template-columns:minmax(0,1fr);grid-template-rows:auto 1fr}
+  .pw-pane{padding:0 24px 28px}
+  .pw-col{margin:0 auto;gap:16px}
+  .pw-mark{width:72px;height:72px;margin-top:-36px;position:relative;z-index:2;border:3px solid #fff;border-radius:20px}
+  .pw-title{font-size:27px}
+}
+</style>
+</helmet>
+<div class="pw-page" style="min-height: {{rootH}}">
+  <div class="pw-grid" style="min-height: {{rootH}}">
+    <div class="pw-slot">
+      <dc-import name="AuthPanel" hero="{{panelHero}}" sub="{{panelSub}}" fill="{{ true }}" hint-size="100%,100%"></dc-import>
+    </div>
+    <main class="pw-pane">
+      <div class="pw-col">
+        <img class="pw-mark" src="./assets/f84ce6484952aa053561c472341d1621.png" alt="Atlight" width="76" height="76">
+
+        <sc-if value="{{notDone}}" hint-placeholder-val="{{ true }}">
+          <div class="pw-top">
+            <span class="pw-steptext">Étape {{stepNum}} sur 3</span>
+            <div class="pw-bars" aria-hidden="true">
+              <div class="pw-bar on"><span></span></div>
+              <div class="pw-bar {{bar2}}"><span></span></div>
+              <div class="pw-bar {{bar3}}"><span></span></div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{isEmail}}" hint-placeholder-val="{{ true }}">
+          <form class="pw-step" onSubmit="{{sendCode}}">
+            <h1 class="pw-title">Mot de passe oublié ?</h1>
+            <p class="pw-lead">Indiquez l’adresse e-mail de votre compte. Nous vous enverrons un code pour en choisir un nouveau.</p>
+            <div class="pw-field">
+              <label class="pw-label" for="pw-email">E-mail</label>
+              <input id="pw-email" class="pw-input {{emailCls}}" data-focus="1" type="email" autoComplete="email" placeholder="vous@exemple.com" value="{{email}}" onChange="{{setEmail}}">
+              <sc-if value="{{emailErr}}" hint-placeholder-val="{{ false }}"><p class="pw-err" role="alert"><svg class="pw-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{i.error}}"></path></svg>Saisissez une adresse e-mail valide.</p></sc-if>
+            </div>
+            <button class="pw-btn" type="submit" aria-busy="{{busyAttr}}">
+              <sc-if value="{{busy}}" hint-placeholder-val="{{ false }}"><span class="pw-spin"></span></sc-if>
+              <span>{{sendLabel}}</span>
+            </button>
+            <p class="pw-foot"><a href="Main.dc.html">Retour à la connexion</a></p>
+          </form>
+        </sc-if>
+
+        <sc-if value="{{isCode}}" hint-placeholder-val="{{ false }}">
+          <div class="pw-step">
+            <dc-import name="CodeStep" title="Entrez votre code" email="{{emailShown}}" demo-state="{{codeDemo}}" verify-label="Continuer" on-verified="{{toPassword}}" on-edit-email="{{toEmail}}" hint-size="100%,430px"></dc-import>
+            <p class="pw-foot"><a href="Main.dc.html">Retour à la connexion</a></p>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{isPassword}}" hint-placeholder-val="{{ false }}">
+          <form class="pw-step" onSubmit="{{savePassword}}">
+            <h1 class="pw-title">Choisissez un nouveau mot de passe</h1>
+            <p class="pw-lead">Votre code est confirmé. Il ne reste plus que cette étape.</p>
+            <div class="pw-field">
+              <label class="pw-label" for="pw-pass">Nouveau mot de passe</label>
+              <div class="pw-wrap">
+                <input id="pw-pass" class="pw-input eye {{passCls}}" data-focus="1" type="{{passType}}" autoComplete="new-password" value="{{password}}" onChange="{{setPassword}}">
+                <button class="pw-eye" type="button" onClick="{{toggleShow}}" aria-label="{{eyeLabel}}"><svg class="pw-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{eyeIcon}}"></path></svg></button>
+              </div>
+            </div>
+            <div class="pw-meter" aria-hidden="true">
+              <sc-for list="{{segments}}" as="seg" hint-placeholder-count="4"><div class="pw-seg {{seg.cls}}"></div></sc-for>
+            </div>
+            <div class="pw-meter-row">
+              <span class="pw-rule {{ruleCls}}"><svg class="pw-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ruleIcon}}"></path></svg>8 caractères minimum</span>
+              <sc-if value="{{hasStrength}}" hint-placeholder-val="{{ false }}"><span>Robustesse : <strong>{{strength}}</strong></span></sc-if>
+            </div>
+            <sc-if value="{{passErr}}" hint-placeholder-val="{{ false }}"><p class="pw-err" role="alert"><svg class="pw-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{i.error}}"></path></svg>Utilisez au moins 8 caractères.</p></sc-if>
+            <button class="pw-btn" type="submit" aria-busy="{{busyAttr}}">
+              <sc-if value="{{busy}}" hint-placeholder-val="{{ false }}"><span class="pw-spin"></span></sc-if>
+              <span>{{saveLabel}}</span>
+            </button>
+          </form>
+        </sc-if>
+
+        <sc-if value="{{isDone}}" hint-placeholder-val="{{ false }}">
+          <div class="pw-step pw-done">
+            <div class="pw-burst" aria-hidden="true">
+              <sc-for list="{{sparks}}" as="sp" hint-placeholder-count="6">
+                <span class="pw-spark" style="{{sp.style}}"><svg viewBox="0 0 24 24"><path d="{{sp.icon}}"></path></svg></span>
+              </sc-for>
+              <div class="pw-core"><svg viewBox="0 0 24 24"><path d="{{i.tick}}"></path></svg></div>
+            </div>
+            <h1 class="pw-title">C’est reparti !</h1>
+            <p class="pw-lead">Votre mot de passe a été modifié. Connectez-vous pour retrouver votre réseau.</p>
+            <a class="pw-btn" href="Main.dc.html">Se connecter<svg class="pw-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{i.forward}}"></path></svg></a>
+          </div>
+        </sc-if>
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"startStep":{"editor":"enum","options":["email","code","password","done"],"default":"email"},"codeDemo":{"editor":null},"embedHeight":{"editor":null},"$preview":{"width":1440,"height":900}}'>
+const SPARKS = [
+  { x: 6, y: 8, dx: 34, dy: 28, icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 3.3 1.35-.95a8.01 8.01 0 0 1 4.38 3.34l-.39 1.34-1.35.46L13 6.7V5.3zm-3.35-.95L11 5.3v1.4L7.01 9.49l-1.35-.46-.39-1.34a8.103 8.103 0 0 1 4.38-3.34zM7.08 17.11l-1.14.1A7.938 7.938 0 0 1 4 12c0-.12.01-.23.02-.35l1-.73 1.38.48 1.46 4.34-.78 1.37zm7.42 2.48c-.79.26-1.63.41-2.5.41s-1.71-.15-2.5-.41l-.69-1.49.64-1.1h5.11l.64 1.11-.7 1.48zM14.27 15H9.73l-1.35-4.02L12 8.44l3.63 2.54L14.27 15zm3.79 2.21-1.14-.1-.79-1.37 1.46-4.34 1.39-.47 1 .73c.01.11.02.22.02.34 0 1.99-.73 3.81-1.94 5.21z' },
+  { x: 72, y: 0, dx: 0, dy: 36, icon: 'M17.09 11h4.86a9.951 9.951 0 0 0-1.54-4.4 5.987 5.987 0 0 0-3.32 4.4zM6.91 11a5.987 5.987 0 0 0-3.32-4.4A9.951 9.951 0 0 0 2.05 11h4.86zm8.16 0a7.994 7.994 0 0 1 4.06-6A9.969 9.969 0 0 0 13 2.05V11h2.07zm-6.14 0H11V2.05A9.943 9.943 0 0 0 4.87 5a7.994 7.994 0 0 1 4.06 6zm6.14 2H13v8.95A9.943 9.943 0 0 0 19.13 19a7.994 7.994 0 0 1-4.06-6zM3.59 17.4A6.029 6.029 0 0 0 6.91 13H2.05c.16 1.61.71 3.11 1.54 4.4zm13.5-4.4a5.987 5.987 0 0 0 3.32 4.4 9.951 9.951 0 0 0 1.54-4.4h-4.86zm-8.16 0a7.994 7.994 0 0 1-4.06 6A9.969 9.969 0 0 0 11 21.95V13H8.93z' },
+  { x: 138, y: 8, dx: -34, dy: 28, icon: 'M19.52 2.49C17.18.15 12.9.62 9.97 3.55c-1.6 1.6-2.52 3.87-2.54 5.46-.02 1.58.26 3.89-1.35 5.5l-4.24 4.24 1.42 1.42 4.24-4.24c1.61-1.61 3.92-1.33 5.5-1.35s3.86-.94 5.46-2.54c2.92-2.93 3.4-7.21 1.06-9.55zm-9.2 9.19c-1.53-1.53-1.05-4.61 1.06-6.72s5.18-2.59 6.72-1.06c1.53 1.53 1.05 4.61-1.06 6.72s-5.18 2.59-6.72 1.06zM18 17c.53 0 1.04.21 1.41.59.78.78.78 2.05 0 2.83-.37.37-.88.58-1.41.58s-1.04-.21-1.41-.59c-.78-.78-.78-2.05 0-2.83.37-.37.88-.58 1.41-.58m0-2a3.998 3.998 0 0 0-2.83 6.83c.78.78 1.81 1.17 2.83 1.17a3.998 3.998 0 0 0 2.83-6.83A3.998 3.998 0 0 0 18 15z' },
+  { x: 2, y: 108, dx: 38, dy: -30, icon: 'M20.49 3.51c-.56-.56-2.15-.97-4.16-.97-3.08 0-7.15.96-9.98 3.79-4.69 4.7-4.25 12.74-2.84 14.16.56.56 2.15.97 4.16.97 3.08 0 7.15-.96 9.98-3.79 4.69-4.7 4.25-12.74 2.84-14.16zM7.76 7.76c2.64-2.64 6.35-3.12 8.03-3.19-2.05.94-4.46 2.45-6.61 4.61a23.462 23.462 0 0 0-4.62 6.63c.1-2.48.88-5.74 3.2-8.05zm8.48 8.48c-2.64 2.64-6.35 3.12-8.03 3.19 2.05-.94 4.46-2.45 6.61-4.61 2.16-2.16 3.67-4.58 4.62-6.63-.1 2.48-.88 5.74-3.2 8.05z' },
+  { x: 72, y: 116, dx: 0, dy: -36, icon: 'M13.49 5.48c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm-3.6 13.9 1-4.4 2.1 2v6h2v-7.5l-2.1-2 .6-3c1.3 1.5 3.3 2.5 5.5 2.5v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.1l-5.2 2.2v4.7h2v-3.4l1.8-.7-1.6 8.1-4.9-1-.4 2 7 1.4z' },
+  { x: 142, y: 108, dx: -38, dy: -30, icon: 'M6 4.01C3.58 5.84 2 8.73 2 12c0 1.46.32 2.85.89 4.11L6 14.31V4.01zm5 7.41V2.05c-1.06.11-2.07.38-3 .79v10.32l3-1.74zm1 1.73-8.11 4.68c.61.84 1.34 1.59 2.18 2.2L15 14.89l-3-1.74zm1-5.19v3.46l8.11 4.68c.42-.93.7-1.93.82-2.98L13 7.96zM8.07 21.2c1.21.51 2.53.8 3.93.8 3.34 0 6.29-1.65 8.11-4.16L17 16.04 8.07 21.2zm13.85-10.39c-.55-4.63-4.26-8.3-8.92-8.76v3.6l8.92 5.16z' }
+];
+const HEROES = {
+  email: { hero: 'Un faux départ ? On vous remet en jeu.', sub: 'Quelques instants suffisent pour reprendre votre place.' },
+  code: { hero: 'Plus qu’un code pour revenir.', sub: 'Nous vérifions simplement que c’est bien vous.' },
+  password: { hero: 'Repartez du bon pied.', sub: 'Un mot de passe que vous seul connaissez, et c’est reparti.' },
+  done: { hero: 'De retour dans le jeu.', sub: 'Votre réseau vous attend, quel que soit votre sport.' }
+};
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = {
+      step: props.startStep || 'email',
+      email: '', tried: false, busy: false,
+      password: props.startStep === 'password' && props.embedHeight ? 'Atlight2026' : '', show: false, passTried: false
+    };
+  }
+  componentDidMount() {
+    this.focusField();
+  }
+  componentWillUnmount() {
+    clearTimeout(this.timer);
+  }
+  focusField() {
+    if (this.props.embedHeight || !document.hasFocus()) return;
+    setTimeout(() => {
+      const el = document.querySelector('.pw-page [data-focus]');
+      if (el) el.focus({ preventScroll: true });
+    }, 60);
+  }
+  go(step) {
+    this.setState({ step, busy: false });
+    this.focusField();
+  }
+  renderVals() {
+    const s = this.state;
+    const p = this.props;
+    const eye = 'M12 6a9.77 9.77 0 0 1 8.82 5.5C19.17 14.87 15.79 17 12 17s-7.17-2.13-8.82-5.5A9.77 9.77 0 0 1 12 6m0-2C7 4 2.73 7.11 1 11.5 2.73 15.89 7 19 12 19s9.27-3.11 11-7.5C21.27 7.11 17 4 12 4zm0 5a2.5 2.5 0 0 1 0 5 2.5 2.5 0 0 1 0-5m0-2c-2.48 0-4.5 2.02-4.5 4.5S9.52 16 12 16s4.5-2.02 4.5-4.5S14.48 7 12 7z';
+    const eyeOff = 'M12 6a9.77 9.77 0 0 1 8.82 5.5 9.647 9.647 0 0 1-2.41 3.12l1.41 1.41c1.39-1.23 2.49-2.77 3.18-4.53C21.27 7.11 17 4 12 4c-1.27 0-2.49.2-3.64.57l1.65 1.65C10.66 6.09 11.32 6 12 6zm-1.07 1.14L13 9.21c.57.25 1.03.71 1.28 1.28l2.07 2.07c.08-.34.14-.7.14-1.07C16.5 9.01 14.48 7 12 7c-.37 0-.72.05-1.07.14zM2.01 3.87l2.68 2.68A11.738 11.738 0 0 0 1 11.5C2.73 15.89 7 19 12 19c1.52 0 2.98-.29 4.32-.82l3.42 3.42 1.41-1.41L3.42 2.45 2.01 3.87zm7.5 7.5 2.61 2.61c-.04.01-.08.02-.12.02a2.5 2.5 0 0 1-2.5-2.5c0-.05.01-.08.01-.13zm-3.4-3.4 1.75 1.75a4.6 4.6 0 0 0-.36 1.78 4.507 4.507 0 0 0 6.27 4.14l.98.98c-.88.24-1.8.38-2.75.38a9.77 9.77 0 0 1-8.82-5.5c.7-1.43 1.72-2.61 2.93-3.53z';
+    const tick = 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z';
+    const ring = 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z';
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s.email.trim());
+    const pw = s.password;
+    const passOk = pw.length >= 8;
+    let score = 0;
+    if (pw.length >= 1) score = 1;
+    if (passOk) score = 2;
+    if (passOk && /[a-z]/.test(pw) && /[A-Z]/.test(pw) && /\d/.test(pw)) score = 3;
+    if (passOk && /[a-z]/.test(pw) && /[A-Z]/.test(pw) && /\d/.test(pw) && (pw.length >= 12 || /[^A-Za-z0-9]/.test(pw))) score = 4;
+    const stepNum = s.step === 'email' ? 1 : s.step === 'code' ? 2 : 3;
+    const hero = HEROES[s.step];
+    return {
+      rootH: p.embedHeight ?? '100vh',
+      panelHero: hero.hero,
+      panelSub: hero.sub,
+      stepNum,
+      bar2: stepNum >= 2 ? 'on' : '',
+      bar3: stepNum >= 3 ? 'on' : '',
+      notDone: s.step !== 'done',
+      isEmail: s.step === 'email',
+      isCode: s.step === 'code',
+      isPassword: s.step === 'password',
+      isDone: s.step === 'done',
+      email: s.email,
+      emailShown: s.email.trim() || 'awa.diallo@exemple.com',
+      codeDemo: p.codeDemo || (p.embedHeight ? 'input' : undefined),
+      emailErr: s.tried && !emailOk,
+      emailCls: s.tried && !emailOk ? 'is-err' : '',
+      setEmail: (e) => this.setState({ email: e.target.value }),
+      busy: s.busy,
+      busyAttr: s.busy ? 'true' : undefined,
+      sendLabel: s.busy ? 'Envoi du code…' : 'Recevoir le code',
+      sendCode: (e) => {
+        e.preventDefault();
+        if (s.busy) return;
+        if (!emailOk) { this.setState({ tried: true }); return; }
+        this.setState({ busy: true });
+        this.timer = setTimeout(() => this.go('code'), 750);
+      },
+      toEmail: () => this.go('email'),
+      toPassword: () => this.go('password'),
+      password: pw,
+      passType: s.show ? 'text' : 'password',
+      eyeIcon: s.show ? eyeOff : eye,
+      eyeLabel: s.show ? 'Masquer le mot de passe' : 'Afficher le mot de passe',
+      setPassword: (e) => this.setState({ password: e.target.value, passTried: false }),
+      toggleShow: () => this.setState({ show: !s.show }),
+      passErr: s.passTried && !passOk,
+      passCls: s.passTried && !passOk ? 'is-err' : '',
+      segments: [1, 2, 3, 4].map((n) => ({ cls: n <= score ? 's' + score : '' })),
+      hasStrength: score > 0,
+      strength: ['', 'Trop court', 'Correct', 'Bon', 'Excellent'][score],
+      ruleCls: passOk ? 'ok' : '',
+      ruleIcon: passOk ? tick : ring,
+      saveLabel: s.busy ? 'Enregistrement…' : 'Enregistrer le mot de passe',
+      savePassword: (e) => {
+        e.preventDefault();
+        if (s.busy) return;
+        if (!passOk) { this.setState({ passTried: true }); return; }
+        this.setState({ busy: true });
+        this.timer = setTimeout(() => this.go('done'), 750);
+      },
+      sparks: SPARKS.map((x, n) => ({
+        icon: x.icon,
+        style: 'left:' + x.x + 'px;top:' + x.y + 'px;--dx:' + x.dx + 'px;--dy:' + x.dy + 'px;animation-delay:' + (120 + n * 45) + 'ms'
+      })),
+      i: {
+        error: 'M11 15h2v2h-2v-2zm0-8h2v6h-2V7zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z',
+        tick: 'M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z',
+        forward: 'm12 4-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z'
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

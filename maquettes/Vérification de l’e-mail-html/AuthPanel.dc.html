@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Atlight · Panneau multisport</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;0,900;1,900&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+.ap-root{container:panel / inline-size;display:flex;flex:1 1 100%;width:100%;min-width:0;font-family:Roboto,system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+.ap-root *{box-sizing:border-box}
+.ap{--pad:clamp(28px,8cqi,64px);position:relative;overflow:hidden;flex:1;min-width:0;background:#009970;color:#fff;padding:44px var(--pad) 26px;display:flex;flex-direction:column;gap:22px}
+.ap-floor{position:absolute;right:-250px;bottom:-330px;width:900px;height:900px;transform:perspective(1500px) rotateX(50deg) rotateZ(-26deg);pointer-events:none}
+.ap-scene{position:absolute;inset:0;width:100%;height:100%;fill:none;stroke:#fff;stroke-opacity:.34;stroke-width:3;opacity:0;transition:opacity .55s ease}
+.ap-scene *{stroke-dasharray:1;stroke-dashoffset:0}
+.ap-scene.on{opacity:1}
+.ap-scene.on *{animation:apDraw 1.7s cubic-bezier(.3,.7,.2,1) backwards}
+.ap-main{position:relative;margin:auto 0;display:flex;flex-direction:column;gap:20px;min-width:0}
+.ap-tag{display:inline-flex;align-items:center;gap:7px;width:max-content;height:38px;padding:0 14px 0 10px;border-radius:19px;background:#fff;color:#00664B;font-size:14px;font-weight:700}
+.ap-ic{width:20px;height:20px;fill:currentColor;flex:none;display:block}
+.ap-tag-swap{display:inline-flex;align-items:center;gap:7px}
+.ap-tag-swap.a0{animation:apSwapA .4s ease-out}
+.ap-tag-swap.a1{animation:apSwapB .4s ease-out}
+.ap-hero{margin:0;font-size:clamp(36px,9.4cqi,74px);line-height:1.02;font-weight:900;font-style:italic;letter-spacing:-.02em;text-wrap:balance}
+.ap-hero.fixed{max-width:11.5ch}
+.ap-hero.fixed.a0{animation:apSwapA .42s cubic-bezier(.2,.8,.2,1)}
+.ap-hero.fixed.a1{animation:apSwapB .42s cubic-bezier(.2,.8,.2,1)}
+.ap-line{display:block}
+.ap-wordbox{display:block;overflow:hidden;padding:.06em .12em .1em 0;margin:-.06em 0 -.1em}
+.ap-word{display:block;white-space:nowrap}
+.ap-word.a0{animation:apWordA .55s cubic-bezier(.2,.9,.2,1)}
+.ap-word.a1{animation:apWordB .55s cubic-bezier(.2,.9,.2,1)}
+.ap-sub{margin:0;font-size:19px;line-height:1.38;font-weight:700;max-width:31em}
+.ap-hide{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+.ap-stage{position:relative;height:166px;margin-top:6px}
+.ap-card{position:absolute;left:0;top:20px;width:min(100%,430px);background:#fff;color:#212121;border-radius:16px;padding:16px 18px;display:flex;gap:16px;align-items:center;box-shadow:0 18px 44px rgba(0,60,44,.3);animation:apFloat 7s ease-in-out infinite}
+.ap-card-in{display:flex;gap:16px;align-items:center;min-width:0;width:100%}
+.ap-card-in.a0{animation:apSwapA .42s ease-out}
+.ap-card-in.a1{animation:apSwapB .42s ease-out}
+.ap-av{position:relative;width:92px;height:92px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;flex:none}
+.ap-ott{position:absolute;inset:0;width:100%;height:100%}
+.ap-who{min-width:0;display:flex;flex-direction:column;gap:4px}
+.ap-name{display:flex;align-items:center;gap:5px;font-size:18px;font-weight:700;line-height:1.25}
+.ap-role{font-size:14px;color:#616161;line-height:1.3}
+.ap-chip{display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:5px 10px 5px 7px;border-radius:8px;background:#E6F5F1;color:#00664B;font-size:13px;font-weight:500;width:max-content;max-width:100%}
+.ap-react{position:absolute;left:min(calc(100% - 210px),236px);top:0;display:flex;gap:3px;padding:6px 9px;background:#fff;border-radius:20px;box-shadow:0 10px 24px rgba(0,60,44,.28);animation:apFloat 7s ease-in-out -2.4s infinite}
+.ap-react svg{width:25px;height:25px;display:block}
+.ap-perks{list-style:none;margin:6px 0 0;padding:8px 18px;background:#fff;color:#212121;border-radius:16px;max-width:430px;box-shadow:0 18px 44px rgba(0,60,44,.28)}
+.ap-perks.a0{animation:apSwapA .42s cubic-bezier(.2,.8,.2,1)}
+.ap-perks.a1{animation:apSwapB .42s cubic-bezier(.2,.8,.2,1)}
+.ap-perk{display:flex;align-items:center;gap:13px;padding:10px 0;font-size:15px;line-height:1.35;border-bottom:1px solid #EEEEEE}
+.ap-perk:last-child{border-bottom:0}
+.ap-perk-ic{width:36px;height:36px;border-radius:50%;background:#E6F5F1;color:#00664B;display:flex;align-items:center;justify-content:center;flex:none}
+.ap-ticker{position:relative;margin-inline:calc(var(--pad) * -1);overflow:hidden;flex:none}
+.ap-track{display:flex;gap:8px;width:max-content;animation:apTicker 46s linear infinite}
+.ap-pill{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 13px 0 9px;border-radius:18px;background:rgba(255,255,255,.96);color:#00664B;font-size:14px;font-weight:700;flex:none;transition:background .3s,color .3s}
+.ap-pill.on{background:#9AEED7;color:#00392B}
+@keyframes apDraw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+@keyframes apFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes apTicker{to{transform:translateX(-50%)}}
+@keyframes apSwapA{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes apSwapB{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes apWordA{from{opacity:0;transform:translateY(70%)}to{opacity:1;transform:none}}
+@keyframes apWordB{from{opacity:0;transform:translateY(70%)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){
+  .ap-scene.on *,.ap-card,.ap-react,.ap-track,.ap-word,.ap-hero.fixed,.ap-card-in,.ap-perks,.ap-tag-swap{animation:none}
+}
+@container page (max-width:900px){
+  .ap{padding:16px 24px 46px;gap:10px}
+  .ap-floor{right:-290px;bottom:-470px;width:620px;height:620px}
+  .ap-main{margin:0;gap:8px}
+  .ap-hero{font-size:27px}
+  .ap-hero.fixed{max-width:none}
+  .ap-sub,.ap-stage,.ap-perks,.ap-tag{display:none}
+  .ap-ticker{margin-inline:-24px}
+  .ap-pill{height:32px;font-size:13px}
+}
+</style>
+</helmet>
+<div class="ap-root" style="min-height: {{rootH}}">
+  <section class="ap" aria-label="Atlight, le réseau professionnel de tous les sports">
+    <div class="ap-floor" aria-hidden="true">
+      <svg class="ap-scene {{s.football}}" viewBox="0 0 880 880">
+        <rect x="100" y="40" width="680" height="800" pathLength="1"></rect>
+        <line x1="100" y1="440" x2="780" y2="440" pathLength="1"></line>
+        <circle cx="440" cy="440" r="92" pathLength="1"></circle>
+        <rect x="250" y="40" width="380" height="136" pathLength="1"></rect>
+        <rect x="340" y="40" width="200" height="50" pathLength="1"></rect>
+        <path d="M372 176a84 84 0 0 0 136 0" pathLength="1"></path>
+        <rect x="250" y="704" width="380" height="136" pathLength="1"></rect>
+        <rect x="340" y="790" width="200" height="50" pathLength="1"></rect>
+        <path d="M372 704a84 84 0 0 1 136 0" pathLength="1"></path>
+      </svg>
+      <svg class="ap-scene {{s.basket}}" viewBox="0 0 880 880">
+        <rect x="120" y="40" width="640" height="800" pathLength="1"></rect>
+        <line x1="120" y1="440" x2="760" y2="440" pathLength="1"></line>
+        <circle cx="440" cy="440" r="72" pathLength="1"></circle>
+        <rect x="340" y="40" width="200" height="224" pathLength="1"></rect>
+        <circle cx="440" cy="264" r="72" pathLength="1"></circle>
+        <path d="M170 40v120a270 270 0 0 0 540 0V40" pathLength="1"></path>
+        <rect x="340" y="616" width="200" height="224" pathLength="1"></rect>
+        <circle cx="440" cy="616" r="72" pathLength="1"></circle>
+        <path d="M170 840V720a270 270 0 0 1 540 0v120" pathLength="1"></path>
+      </svg>
+      <svg class="ap-scene {{s.athle}}" viewBox="0 0 880 880">
+        <rect x="120" y="50" width="640" height="780" rx="320" pathLength="1"></rect>
+        <rect x="160" y="90" width="560" height="700" rx="280" pathLength="1"></rect>
+        <rect x="200" y="130" width="480" height="620" rx="240" pathLength="1"></rect>
+        <rect x="240" y="170" width="400" height="540" rx="200" pathLength="1"></rect>
+        <rect x="280" y="210" width="320" height="460" rx="160" pathLength="1"></rect>
+        <line x1="120" y1="440" x2="280" y2="440" pathLength="1"></line>
+        <line x1="600" y1="370" x2="760" y2="370" pathLength="1"></line>
+      </svg>
+      <svg class="ap-scene {{s.tennis}}" viewBox="0 0 880 880">
+        <rect x="190" y="50" width="500" height="780" pathLength="1"></rect>
+        <line x1="252" y1="50" x2="252" y2="830" pathLength="1"></line>
+        <line x1="628" y1="50" x2="628" y2="830" pathLength="1"></line>
+        <line x1="150" y1="440" x2="730" y2="440" pathLength="1" stroke-width="6"></line>
+        <line x1="252" y1="240" x2="628" y2="240" pathLength="1"></line>
+        <line x1="252" y1="640" x2="628" y2="640" pathLength="1"></line>
+        <line x1="440" y1="240" x2="440" y2="640" pathLength="1"></line>
+      </svg>
+      <svg class="ap-scene {{s.rugby}}" viewBox="0 0 880 880">
+        <rect x="130" y="30" width="620" height="820" pathLength="1"></rect>
+        <line x1="130" y1="120" x2="750" y2="120" pathLength="1"></line>
+        <line x1="130" y1="760" x2="750" y2="760" pathLength="1"></line>
+        <line x1="130" y1="280" x2="750" y2="280" pathLength="1"></line>
+        <line x1="130" y1="600" x2="750" y2="600" pathLength="1"></line>
+        <line x1="130" y1="440" x2="750" y2="440" pathLength="1"></line>
+        <path d="M400 80v80M480 80v80M400 112h80M400 720v80M480 720v80M400 768h80" pathLength="1"></path>
+      </svg>
+      <svg class="ap-scene {{s.natation}}" viewBox="0 0 880 880">
+        <rect x="120" y="40" width="640" height="800" pathLength="1"></rect>
+        <line x1="200" y1="40" x2="200" y2="840" pathLength="1"></line>
+        <line x1="280" y1="40" x2="280" y2="840" pathLength="1"></line>
+        <line x1="360" y1="40" x2="360" y2="840" pathLength="1"></line>
+        <line x1="440" y1="40" x2="440" y2="840" pathLength="1"></line>
+        <line x1="520" y1="40" x2="520" y2="840" pathLength="1"></line>
+        <line x1="600" y1="40" x2="600" y2="840" pathLength="1"></line>
+        <line x1="680" y1="40" x2="680" y2="840" pathLength="1"></line>
+        <line x1="120" y1="150" x2="760" y2="150" pathLength="1"></line>
+        <line x1="120" y1="730" x2="760" y2="730" pathLength="1"></line>
+      </svg>
+      <svg class="ap-scene {{s.volley}}" viewBox="0 0 880 880">
+        <rect x="170" y="100" width="540" height="680" pathLength="1"></rect>
+        <line x1="130" y1="440" x2="750" y2="440" pathLength="1" stroke-width="6"></line>
+        <line x1="170" y1="320" x2="710" y2="320" pathLength="1"></line>
+        <line x1="170" y1="560" x2="710" y2="560" pathLength="1"></line>
+      </svg>
+      <svg class="ap-scene {{s.boxe}}" viewBox="0 0 880 880">
+        <rect x="130" y="130" width="620" height="620" pathLength="1"></rect>
+        <rect x="170" y="170" width="540" height="540" pathLength="1"></rect>
+        <rect x="210" y="210" width="460" height="460" pathLength="1"></rect>
+        <circle cx="130" cy="130" r="22" pathLength="1"></circle>
+        <circle cx="750" cy="130" r="22" pathLength="1"></circle>
+        <circle cx="130" cy="750" r="22" pathLength="1"></circle>
+        <circle cx="750" cy="750" r="22" pathLength="1"></circle>
+        <circle cx="440" cy="440" r="86" pathLength="1"></circle>
+      </svg>
+      <svg class="ap-scene {{s.handball}}" viewBox="0 0 880 880">
+        <rect x="120" y="40" width="640" height="800" pathLength="1"></rect>
+        <line x1="120" y1="440" x2="760" y2="440" pathLength="1"></line>
+        <path d="M230 40a210 210 0 0 0 420 0" pathLength="1"></path>
+        <path d="M170 40a270 270 0 0 0 540 0" pathLength="1"></path>
+        <path d="M230 840a210 210 0 0 1 420 0" pathLength="1"></path>
+        <path d="M170 840a270 270 0 0 1 540 0" pathLength="1"></path>
+      </svg>
+      <svg class="ap-scene {{s.cyclisme}}" viewBox="0 0 880 880">
+        <rect x="130" y="40" width="620" height="800" rx="310" pathLength="1"></rect>
+        <rect x="185" y="95" width="510" height="690" rx="255" pathLength="1"></rect>
+        <rect x="240" y="150" width="400" height="580" rx="200" pathLength="1"></rect>
+        <line x1="130" y1="440" x2="240" y2="440" pathLength="1" stroke-width="6"></line>
+      </svg>
+      <svg class="ap-scene {{s.judo}}" viewBox="0 0 880 880">
+        <rect x="110" y="110" width="660" height="660" pathLength="1"></rect>
+        <rect x="210" y="210" width="460" height="460" pathLength="1"></rect>
+        <line x1="400" y1="390" x2="400" y2="490" pathLength="1"></line>
+        <line x1="480" y1="390" x2="480" y2="490" pathLength="1"></line>
+      </svg>
+      <svg class="ap-scene {{s.gym}}" viewBox="0 0 880 880">
+        <rect x="120" y="120" width="640" height="640" pathLength="1"></rect>
+        <rect x="170" y="170" width="540" height="540" pathLength="1"></rect>
+        <line x1="170" y1="170" x2="710" y2="710" pathLength="1"></line>
+        <line x1="710" y1="170" x2="170" y2="710" pathLength="1"></line>
+      </svg>
+    </div>
+
+    <div class="ap-main">
+      <sc-if value="{{isRotating}}" hint-placeholder-val="{{ true }}">
+        <p class="ap-hero">
+          <span class="ap-line">Le réseau professionnel</span>
+          <span class="ap-hide">de tous les sports.</span>
+          <span class="ap-wordbox" aria-hidden="true"><span class="ap-word {{swap}}">{{sport.phrase}}</span></span>
+        </p>
+      </sc-if>
+      <sc-if value="{{isFixed}}" hint-placeholder-val="{{ false }}">
+        <span class="ap-tag" aria-hidden="true"><span class="ap-tag-swap {{swap}}"><svg class="ap-ic" viewBox="0 0 24 24"><path d="{{sport.icon}}"></path></svg>{{sport.label}}</span></span>
+        <p class="ap-hero fixed {{heroAnim}}">{{hero}}</p>
+      </sc-if>
+      <sc-if value="{{hasSub}}" hint-placeholder-val="{{ false }}"><p class="ap-sub">{{sub}}</p></sc-if>
+
+      <sc-if value="{{showProfile}}" hint-placeholder-val="{{ false }}">
+        <div class="ap-stage" aria-hidden="true">
+          <div class="ap-card">
+            <div class="ap-card-in {{swap}}">
+              <div class="ap-av" style="background: {{sport.bg}}; color: {{sport.fg}}">
+                <span>{{sport.ini}}</span>
+                <sc-if value="{{sport.ott}}" hint-placeholder-val="{{ false }}">
+                  <svg class="ap-ott" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="42.5" fill="none" stroke="#009970" stroke-width="15"></circle>
+                    <defs><path id="ap-ott-arc" d="M3.8 50A46.2 46.2 0 0 0 96.2 50"></path></defs>
+                    <text font-size="9.6" font-weight="700" fill="#fff" letter-spacing=".55" font-family="Roboto, sans-serif"><textPath href="#ap-ott-arc" startOffset="50%" text-anchor="middle">OPEN TO TRYOUTS</textPath></text>
+                  </svg>
+                </sc-if>
+              </div>
+              <div class="ap-who">
+                <div class="ap-name">{{sport.name}}<sc-if value="{{sport.verified}}" hint-placeholder-val="{{ false }}"><svg class="ap-ic" viewBox="0 0 24 24" style="fill:#009970;width:18px;height:18px"><path d="{{i.verified}}"></path></svg></sc-if></div>
+                <div class="ap-role">{{sport.role}}</div>
+                <div class="ap-chip"><svg class="ap-ic" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="{{sport.icon}}"></path></svg>{{sport.chip}}</div>
+              </div>
+            </div>
+          </div>
+          <div class="ap-react">
+            <svg viewBox="0 0 24 24" style="fill:#FFC400"><path d="{{i.gold}}"></path></svg>
+            <svg viewBox="0 0 24 24" style="fill:#607D8B"><path d="{{i.medal}}"></path></svg>
+            <svg viewBox="0 0 24 24" style="fill:#FFC107"><path d="{{i.medal}}"></path></svg>
+            <svg viewBox="0 0 24 24" style="fill:#4CAF50"><path d="{{i.goal}}"></path></svg>
+            <svg viewBox="0 0 24 24" style="fill:#FF9800"><path d="{{i.whistle}}"></path></svg>
+            <svg viewBox="0 0 24 24" style="fill:#FF5252"><path d="{{i.strong}}"></path></svg>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{hasPerks}}" hint-placeholder-val="{{ false }}">
+        <ul class="ap-perks {{heroAnim}}">
+          <sc-for list="{{perks}}" as="p" hint-placeholder-count="3">
+            <li class="ap-perk"><span class="ap-perk-ic"><svg class="ap-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{p.icon}}"></path></svg></span><span>{{p.text}}</span></li>
+          </sc-for>
+        </ul>
+      </sc-if>
+    </div>
+
+    <div class="ap-ticker" aria-hidden="true">
+      <div class="ap-track">
+        <sc-for list="{{ticker}}" as="t" hint-placeholder-count="12">
+          <span class="ap-pill {{t.cls}}"><svg class="ap-ic" viewBox="0 0 24 24"><path d="{{t.icon}}"></path></svg>{{t.label}}</span>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"hero":{"editor":null},"sub":{"editor":null},"perks":{"editor":null},"showProfile":{"editor":null},"fill":{"editor":null},"lockedSport":{"editor":null},"$preview":{"width":748,"height":900}}'>
+const ICON = {"football":"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 3.3 1.35-.95a8.01 8.01 0 0 1 4.38 3.34l-.39 1.34-1.35.46L13 6.7V5.3zm-3.35-.95L11 5.3v1.4L7.01 9.49l-1.35-.46-.39-1.34a8.103 8.103 0 0 1 4.38-3.34zM7.08 17.11l-1.14.1A7.938 7.938 0 0 1 4 12c0-.12.01-.23.02-.35l1-.73 1.38.48 1.46 4.34-.78 1.37zm7.42 2.48c-.79.26-1.63.41-2.5.41s-1.71-.15-2.5-.41l-.69-1.49.64-1.1h5.11l.64 1.11-.7 1.48zM14.27 15H9.73l-1.35-4.02L12 8.44l3.63 2.54L14.27 15zm3.79 2.21-1.14-.1-.79-1.37 1.46-4.34 1.39-.47 1 .73c.01.11.02.22.02.34 0 1.99-.73 3.81-1.94 5.21z","basket":"M17.09 11h4.86a9.951 9.951 0 0 0-1.54-4.4 5.987 5.987 0 0 0-3.32 4.4zM6.91 11a5.987 5.987 0 0 0-3.32-4.4A9.951 9.951 0 0 0 2.05 11h4.86zm8.16 0a7.994 7.994 0 0 1 4.06-6A9.969 9.969 0 0 0 13 2.05V11h2.07zm-6.14 0H11V2.05A9.943 9.943 0 0 0 4.87 5a7.994 7.994 0 0 1 4.06 6zm6.14 2H13v8.95A9.943 9.943 0 0 0 19.13 19a7.994 7.994 0 0 1-4.06-6zM3.59 17.4A6.029 6.029 0 0 0 6.91 13H2.05c.16 1.61.71 3.11 1.54 4.4zm13.5-4.4a5.987 5.987 0 0 0 3.32 4.4 9.951 9.951 0 0 0 1.54-4.4h-4.86zm-8.16 0a7.994 7.994 0 0 1-4.06 6A9.969 9.969 0 0 0 11 21.95V13H8.93z","athle":"M13.49 5.48c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm-3.6 13.9 1-4.4 2.1 2v6h2v-7.5l-2.1-2 .6-3c1.3 1.5 3.3 2.5 5.5 2.5v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.1l-5.2 2.2v4.7h2v-3.4l1.8-.7-1.6 8.1-4.9-1-.4 2 7 1.4z","tennis":"M19.52 2.49C17.18.15 12.9.62 9.97 3.55c-1.6 1.6-2.52 3.87-2.54 5.46-.02 1.58.26 3.89-1.35 5.5l-4.24 4.24 1.42 1.42 4.24-4.24c1.61-1.61 3.92-1.33 5.5-1.35s3.86-.94 5.46-2.54c2.92-2.93 3.4-7.21 1.06-9.55zm-9.2 9.19c-1.53-1.53-1.05-4.61 1.06-6.72s5.18-2.59 6.72-1.06c1.53 1.53 1.05 4.61-1.06 6.72s-5.18 2.59-6.72 1.06zM18 17c.53 0 1.04.21 1.41.59.78.78.78 2.05 0 2.83-.37.37-.88.58-1.41.58s-1.04-.21-1.41-.59c-.78-.78-.78-2.05 0-2.83.37-.37.88-.58 1.41-.58m0-2a3.998 3.998 0 0 0-2.83 6.83c.78.78 1.81 1.17 2.83 1.17a3.998 3.998 0 0 0 2.83-6.83A3.998 3.998 0 0 0 18 15z","rugby":"M20.49 3.51c-.56-.56-2.15-.97-4.16-.97-3.08 0-7.15.96-9.98 3.79-4.69 4.7-4.25 12.74-2.84 14.16.56.56 2.15.97 4.16.97 3.08 0 7.15-.96 9.98-3.79 4.69-4.7 4.25-12.74 2.84-14.16zM7.76 7.76c2.64-2.64 6.35-3.12 8.03-3.19-2.05.94-4.46 2.45-6.61 4.61a23.462 23.462 0 0 0-4.62 6.63c.1-2.48.88-5.74 3.2-8.05zm8.48 8.48c-2.64 2.64-6.35 3.12-8.03 3.19 2.05-.94 4.46-2.45 6.61-4.61 2.16-2.16 3.67-4.58 4.62-6.63-.1 2.48-.88 5.74-3.2 8.05z","natation":"M22 21c-1.11 0-1.73-.37-2.18-.64-.37-.22-.6-.36-1.15-.36-.56 0-.78.13-1.15.36-.46.27-1.07.64-2.18.64s-1.73-.37-2.18-.64c-.37-.22-.6-.36-1.15-.36-.56 0-.78.13-1.15.36-.46.27-1.08.64-2.19.64-1.11 0-1.73-.37-2.18-.64-.37-.23-.6-.36-1.15-.36s-.78.13-1.15.36c-.46.27-1.08.64-2.19.64v-2c.56 0 .78-.13 1.15-.36.46-.27 1.08-.64 2.19-.64s1.73.37 2.18.64c.37.23.59.36 1.15.36.56 0 .78-.13 1.15-.36.46-.27 1.08-.64 2.19-.64 1.11 0 1.73.37 2.18.64.37.22.6.36 1.15.36s.78-.13 1.15-.36c.45-.27 1.07-.64 2.18-.64s1.73.37 2.18.64c.37.23.59.36 1.15.36v2zm0-4.5c-1.11 0-1.73-.37-2.18-.64-.37-.22-.6-.36-1.15-.36-.56 0-.78.13-1.15.36-.45.27-1.07.64-2.18.64s-1.73-.37-2.18-.64c-.37-.22-.6-.36-1.15-.36-.56 0-.78.13-1.15.36-.45.27-1.07.64-2.18.64s-1.73-.37-2.18-.64c-.37-.22-.6-.36-1.15-.36s-.78.13-1.15.36c-.47.27-1.09.64-2.2.64v-2c.56 0 .78-.13 1.15-.36.45-.27 1.07-.64 2.18-.64s1.73.37 2.18.64c.37.22.6.36 1.15.36.56 0 .78-.13 1.15-.36.45-.27 1.07-.64 2.18-.64s1.73.37 2.18.64c.37.22.6.36 1.15.36s.78-.13 1.15-.36c.45-.27 1.07-.64 2.18-.64s1.73.37 2.18.64c.37.22.6.36 1.15.36v2zM8.67 12c.56 0 .78-.13 1.15-.36.46-.27 1.08-.64 2.19-.64 1.11 0 1.73.37 2.18.64.37.22.6.36 1.15.36s.78-.13 1.15-.36c.12-.07.26-.15.41-.23L10.48 5C8.93 3.45 7.5 2.99 5 3v2.5c1.82-.01 2.89.39 4 1.5l1 1-3.25 3.25c.31.12.56.27.77.39.37.23.59.36 1.15.36z M14 5.5a2.5 2.5 0 1 0 5 0a2.5 2.5 0 1 0 -5 0z","volley":"M6 4.01C3.58 5.84 2 8.73 2 12c0 1.46.32 2.85.89 4.11L6 14.31V4.01zm5 7.41V2.05c-1.06.11-2.07.38-3 .79v10.32l3-1.74zm1 1.73-8.11 4.68c.61.84 1.34 1.59 2.18 2.2L15 14.89l-3-1.74zm1-5.19v3.46l8.11 4.68c.42-.93.7-1.93.82-2.98L13 7.96zM8.07 21.2c1.21.51 2.53.8 3.93.8 3.34 0 6.29-1.65 8.11-4.16L17 16.04 8.07 21.2zm13.85-10.39c-.55-4.63-4.26-8.3-8.92-8.76v3.6l8.92 5.16z","boxe":"M7 20c0 .55.45 1 1 1h8c.55 0 1-.45 1-1v-3H7v3zM18 7c-.55 0-1 .45-1 1V5c0-1.1-.9-2-2-2H7c-1.1 0-2 .9-2 2v5.8c0 .13.01.26.04.39l.8 4c.09.47.5.8.98.8h10.36c.45 0 .89-.36.98-.8l.8-4c.03-.13.04-.26.04-.39V8c0-.55-.45-1-1-1zm-3 3H7V7h8v3z","handball":"M14.27 6c-.55.95-.22 2.18.73 2.73.95.55 2.18.22 2.73-.73.55-.95.22-2.18-.73-2.73-.95-.55-2.18-.22-2.73.73z M15.84 10.41l-2.6-1.5c-2.38-1.38-3.2-4.44-1.82-6.82l-1.73-1C8.1 3.83 8.6 7.21 10.66 9.4l-5.15 8.92 1.73 1 1.5-2.6 1.73 1-3 5.2 1.73 1 6.29-10.89a5.002 5.002 0 0 1 .31 5.46l1.73 1c1.6-2.75 1.28-6.58-1.69-9.08zM12.75 3.8c.72.41 1.63.17 2.05-.55.41-.72.17-1.63-.55-2.05a1.501 1.501 0 0 0-1.5 2.6z","cyclisme":"M15.5 5.5c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zM5 12c-2.8 0-5 2.2-5 5s2.2 5 5 5 5-2.2 5-5-2.2-5-5-5zm0 8.5c-1.9 0-3.5-1.6-3.5-3.5s1.6-3.5 3.5-3.5 3.5 1.6 3.5 3.5-1.6 3.5-3.5 3.5zm5.8-10 2.4-2.4.8.8c1.3 1.3 3 2.1 5.1 2.1V9c-1.5 0-2.7-.6-3.6-1.5l-1.9-1.9c-.5-.4-1-.6-1.6-.6s-1.1.2-1.4.6L7.8 8.4c-.4.4-.6.9-.6 1.4 0 .6.2 1.1.6 1.4L11 14v5h2v-6.2l-2.2-2.3zM19 12c-2.8 0-5 2.2-5 5s2.2 5 5 5 5-2.2 5-5-2.2-5-5-5zm0 8.5c-1.9 0-3.5-1.6-3.5-3.5s1.6-3.5 3.5-3.5 3.5 1.6 3.5 3.5-1.6 3.5-3.5 3.5z","judo":"m19.8 2-8.2 6.7-1.21-1.04 3.6-2.08L9.41 1 8 2.41l2.74 2.74L5 8.46l-1.19 4.29L6.27 17 8 16l-2.03-3.52.35-1.3L9.5 13l.5 9h2l.5-10L21 3.4z M3 5a2 2 0 1 0 4 0a2 2 0 1 0 -4 0z","gym":"M4 6c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2zM1 9h6l7-5 1.31 1.52-4.17 2.98H14L21.8 4 23 5.4 14.5 12 14 22h-2l-.5-10L8 11H1V9z"};
+const SPORTS = [
+  { key: 'football', label: 'Football', phrase: 'du football.', name: 'Awa Diallo', ini: 'AD', ott: true, verified: true, role: 'Athlète @Stade Lagune FC', chip: 'Essai U19 · Milieu offensif', bg: '#E6F5F1', fg: '#00664B' },
+  { key: 'basket', label: 'Basket', phrase: 'du basket.', name: 'Yann Essomba', ini: 'YE', ott: true, verified: false, role: 'Athlète @Basket Club du Littoral', chip: 'Meneur · Ouvert aux essais', bg: '#E3EEF9', fg: '#134A7C' },
+  { key: 'athle', label: 'Athlétisme', phrase: 'de l’athlétisme.', name: 'Inès Kamga', ini: 'IK', ott: false, verified: true, role: 'Athlète @Lagune Athlé', chip: '400 m haies', bg: '#FFF4D6', fg: '#6B4E00' },
+  { key: 'tennis', label: 'Tennis', phrase: 'du tennis.', name: 'Junior Mbarga', ini: 'JM', ott: false, verified: false, role: 'Coach @Tennis Club de Kribi', chip: 'Coach U14', bg: '#EEE9F8', fg: '#46307F' },
+  { key: 'rugby', label: 'Rugby', phrase: 'du rugby.', name: 'Sarah Bello', ini: 'SB', ott: false, verified: true, role: 'Agent', chip: 'Scouting · Rugby à XV', bg: '#FCE7E4', fg: '#8A2B1C' },
+  { key: 'natation', label: 'Natation', phrase: 'de la natation.', name: 'Marie Nguema', ini: 'MN', ott: true, verified: false, role: 'Athlète @Cercle nautique du Wouri', chip: '200 m papillon', bg: '#E3EEF9', fg: '#134A7C' },
+  { key: 'volley', label: 'Volley', phrase: 'du volley.', name: 'Fatou Sarr', ini: 'FS', ott: false, verified: true, role: 'Manager @Académie Kribi Sport', chip: 'Essai U17 · Passeuse', bg: '#FCE7E4', fg: '#8A2B1C' },
+  { key: 'boxe', label: 'Boxe', phrase: 'de la boxe.', name: 'Kevin Atangana', ini: 'KA', ott: true, verified: false, role: 'Athlète @Boxing Club du Centre', chip: 'Poids welters', bg: '#ECEFF1', fg: '#37474F' },
+  { key: 'handball', label: 'Handball', phrase: 'du handball.', name: 'Nadia Owono', ini: 'NO', ott: true, verified: false, role: 'Athlète @Handball Club de la Sanaga', chip: 'Arrière gauche', bg: '#E6F5F1', fg: '#00664B' },
+  { key: 'cyclisme', label: 'Cyclisme', phrase: 'du cyclisme.', name: 'Paul Ndongo', ini: 'PN', ott: false, verified: true, role: 'Athlète @Vélo Club du Littoral', chip: 'Sprinteur · Route', bg: '#FFF4D6', fg: '#6B4E00' },
+  { key: 'judo', label: 'Arts martiaux', phrase: 'des arts martiaux.', name: 'Aïcha Bamba', ini: 'AB', ott: false, verified: true, role: 'Coach @Dojo de la Lagune', chip: 'Judo · Ceinture noire', bg: '#EEE9F8', fg: '#46307F' },
+  { key: 'gym', label: 'Gymnastique', phrase: 'de la gymnastique.', name: 'Léa Mvondo', ini: 'LM', ott: true, verified: false, role: 'Athlète @Gym Club de Kribi', chip: 'Sol et poutre', bg: '#FCE7E4', fg: '#8A2B1C' }
+].map((x) => ({ ...x, icon: ICON[x.key] }));
+const STEP_MS = 3400;
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { idx: 0, turn: 0, heroSeq: 0 };
+  }
+  componentDidMount() {
+    let still = false;
+    try { still = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+    if (still) return;
+    this.timer = setInterval(() => {
+      if (document.hidden || this.props.lockedSport) return;
+      this.setState({ idx: (this.state.idx + 1) % SPORTS.length, turn: this.state.turn + 1 });
+    }, STEP_MS);
+  }
+  componentDidUpdate(prev) {
+    if (prev.hero !== this.props.hero) this.setState({ heroSeq: this.state.heroSeq + 1 });
+    if (prev.lockedSport !== this.props.lockedSport) this.setState({ turn: this.state.turn + 1 });
+  }
+  componentWillUnmount() {
+    clearInterval(this.timer);
+  }
+  renderVals() {
+    const s = this.state;
+    const p = this.props;
+    const sport = SPORTS.find((x) => x.key === p.lockedSport) || SPORTS[s.idx];
+    const on = {};
+    SPORTS.forEach((x) => { on[x.key] = x.key === sport.key ? 'on' : ''; });
+    const pills = SPORTS.map((x) => ({ key: x.key, label: x.label, icon: x.icon }));
+    const ticker = pills.concat(pills).map((x) => ({ ...x, cls: x.key === sport.key ? 'on' : '' }));
+    const hasPerks = !!(p.perks && p.perks.length);
+    return {
+      rootH: p.fill ? '100%' : '100vh',
+      s: on,
+      sport,
+      swap: 'a' + (s.turn % 2),
+      heroAnim: 'a' + (s.heroSeq % 2),
+      isRotating: !p.hero,
+      isFixed: !!p.hero,
+      hero: p.hero,
+      hasSub: !!p.sub,
+      sub: p.sub,
+      showProfile: !!p.showProfile,
+      hasPerks,
+      perks: p.perks || [],
+      ticker,
+      i: {
+        verified: 'm23 12-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z',
+        gold: 'M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94A5.01 5.01 0 0 0 11 15.9V19H7v2h10v-2h-4v-3.1a5.01 5.01 0 0 0 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z',
+        medal: 'M17 10.43V2H7v8.43c0 .35.18.68.49.86l4.18 2.51-.99 2.34-3.41.29 2.59 2.24L9.07 22 12 20.23 14.93 22l-.78-3.33 2.59-2.24-3.41-.29-.99-2.34 4.18-2.51c.3-.18.48-.5.48-.86zm-4 1.8-1 .6-1-.6V3h2v9.23z',
+        goal: ICON.football,
+        whistle: 'M11.23 6c-1.66 0-3.22.66-4.36 1.73C6.54 6.73 5.61 6 4.5 6a2.5 2.5 0 0 0 0 5c.21 0 .41-.03.61-.08-.05.25-.09.51-.1.78a6.006 6.006 0 0 0 6.68 6.27c2.55-.28 4.68-2.26 5.19-4.77.15-.71.15-1.4.06-2.06-.09-.6.38-1.13.99-1.13H22V6H11.23zM4.5 9c-.28 0-.5-.22-.5-.5s.22-.5.5-.5.5.22.5.5-.22.5-.5.5zm6.5 6c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z M9 12a2 2 0 1 0 4 0a2 2 0 1 0 -4 0z',
+        strong: 'M20.57 14.86 22 13.43 20.57 12 17 15.57 8.43 7 12 3.43 10.57 2 9.14 3.43 7.71 2 5.57 4.14 4.14 2.71 2.71 4.14l1.43 1.43L2 7.71l1.43 1.43L2 10.57 3.43 12 7 8.43 15.57 17 12 20.57 13.43 22l1.43-1.43L16.29 22l2.14-2.14 1.43 1.43 1.43-1.43-1.43-1.43L22 16.29z'
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Atlight · Saisie du code</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;0,900;1,900&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+.cs{font-family:Roboto,system-ui,-apple-system,"Segoe UI",sans-serif;color:#212121;display:flex;flex-direction:column;gap:18px;-webkit-font-smoothing:antialiased}
+.cs *{box-sizing:border-box}
+.cs :focus-visible{outline:2px solid #007A59;outline-offset:2px}
+.cs-title{margin:0;font-size:32px;line-height:1.12;font-weight:700;letter-spacing:-.01em}
+.cs-lead{margin:0;font-size:16px;line-height:1.5;color:#616161}
+.cs-mail{font-weight:700;color:#212121;overflow-wrap:anywhere}
+.cs-inline{background:none;border:0;padding:0 0 0 2px;font:500 15px Roboto,system-ui,sans-serif;color:#007A59;cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+.cs-inline:hover{color:#00664B}
+.cs-edit{display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap;animation:csRise .24s ease-out backwards}
+.cs-edit-input{flex:1 1 200px;min-width:0;height:46px;border:1px solid #BDBDBD;border-radius:10px;padding:0 13px;font:400 16px Roboto,system-ui,sans-serif;color:#212121;outline:none;transition:border-color .15s,box-shadow .15s}
+.cs-edit-input:focus{border-color:#009970;box-shadow:0 0 0 .5px #009970,0 0 0 4px rgba(0,153,112,.13)}
+.cs .cs-edit-input:focus-visible{outline:none}
+.cs-edit-input.is-err{border-color:#C62828}
+.cs-edit-btn{height:46px;padding:0 15px;border-radius:10px;border:1.5px solid #007A59;background:#fff;color:#007A59;font:700 15px Roboto,system-ui,sans-serif;cursor:pointer;transition:background .15s}
+.cs-edit-btn:hover{background:#EDF7EE}
+.cs-edit-x{height:46px;padding:0 8px;border:0;background:transparent;color:#616161;font:500 15px Roboto,system-ui,sans-serif;cursor:pointer}
+.cs-otp{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:9px}
+.cs-otp.shake{animation:csShake .42s cubic-bezier(.36,.07,.19,.97)}
+.cs-box{width:100%;min-width:0;height:64px;text-align:center;font:700 27px Roboto,system-ui,sans-serif;color:#212121;caret-color:#009970;border:1px solid #BDBDBD;border-radius:12px;outline:none;background:#fff;transition:border-color .15s,box-shadow .15s,background .15s,transform .15s}
+.cs .cs-box:focus-visible{outline:none}
+.cs-box:hover:not(:disabled){border-color:#9E9E9E}
+.cs-box:focus{border-color:#009970;box-shadow:0 0 0 .5px #009970,0 0 0 4px rgba(0,153,112,.13);transform:translateY(-2px)}
+.cs-box.filled{background:#E6F5F1;border-color:#009970}
+.cs-box.err{background:#FDECEA;border-color:#C62828;color:#8E1C1C}
+.cs-box.ok{background:#009970;border-color:#009970;color:#fff;animation:csOk .42s cubic-bezier(.2,1.5,.4,1) backwards}
+.cs-box:disabled{opacity:1;-webkit-text-fill-color:currentColor}
+.cs-box.off{background:#F5F5F5;border-color:#E0E0E0}
+.cs-time{display:flex;flex-direction:column;gap:7px}
+.cs-time-row{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:14px;color:#616161}
+.cs-time-row strong{color:#212121;font-variant-numeric:tabular-nums}
+.cs-time-row strong.low{color:#9A5B00}
+.cs-track{height:5px;border-radius:3px;background:#EEEEEE;overflow:hidden}
+.cs-fill{height:100%;border-radius:3px;background:#009970;transition:width 1s linear,background .3s}
+.cs-fill.low{background:#E08A00}
+.cs-alert{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:12px;font-size:14px;line-height:1.42;animation:csRise .24s ease-out backwards}
+.cs-alert.bad{background:#FDECEA;color:#8E1C1C}
+.cs-alert.good{background:#E6F5F1;color:#00664B}
+.cs-alert.warn{background:#FFF4D6;color:#5C4300}
+.cs-alert strong{display:block}
+.cs-ic{width:20px;height:20px;fill:currentColor;flex:none;display:block}
+.cs-btn{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;height:54px;border-radius:12px;border:0;background:#009970;font:700 19px Roboto,system-ui,sans-serif;color:#fff;cursor:pointer;transition:background .15s,transform .12s,box-shadow .15s;box-shadow:0 8px 18px rgba(0,153,112,.24)}
+.cs-btn:hover{background:#008A65;box-shadow:0 10px 22px rgba(0,153,112,.3)}
+.cs-btn:active{transform:scale(.985)}
+.cs-btn[aria-busy=true]{pointer-events:none}
+.cs-spin{width:18px;height:18px;border-radius:50%;border:2px solid rgba(255,255,255,.42);border-top-color:#fff;animation:csSpin .7s linear infinite}
+.cs-resend{display:flex;align-items:center;justify-content:space-between;gap:6px 12px;flex-wrap:wrap;font-size:14px;color:#616161}
+.cs-link{min-height:40px;padding:0 2px;background:none;border:0;font:700 14px Roboto,system-ui,sans-serif;color:#007A59;cursor:pointer;font-variant-numeric:tabular-nums}
+.cs-link:hover:not(:disabled){color:#00664B;text-decoration:underline}
+.cs-link:disabled{color:#616161;font-weight:500;cursor:default}
+@keyframes csShake{10%,90%{transform:translateX(-2px)}20%,80%{transform:translateX(4px)}30%,50%,70%{transform:translateX(-7px)}40%,60%{transform:translateX(7px)}}
+@keyframes csOk{from{transform:scale(.8)}to{transform:none}}
+@keyframes csRise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes csSpin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.cs-otp.shake,.cs-box.ok,.cs-alert,.cs-edit{animation:none}}
+@container page (max-width:900px){
+  .cs-title{font-size:27px}
+  .cs-otp{gap:6px}
+  .cs-box{height:56px;font-size:23px;border-radius:10px}
+}
+</style>
+</helmet>
+<form class="cs" onSubmit="{{submit}}" data-cs="1">
+  <h1 class="cs-title">{{title}}</h1>
+  <p class="cs-lead">Saisissez le code à 6 chiffres envoyé à <span class="cs-mail">{{shownEmail}}</span>. <sc-if value="{{showEditLink}}" hint-placeholder-val="{{ true }}"><button class="cs-inline" type="button" onClick="{{startEdit}}">Modifier</button></sc-if></p>
+
+  <sc-if value="{{editing}}" hint-placeholder-val="{{ false }}">
+    <div class="cs-edit">
+      <label style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)" for="cs-new-mail">Nouvelle adresse e-mail</label>
+      <input id="cs-new-mail" class="cs-edit-input {{editCls}}" type="email" autoComplete="email" value="{{draft}}" onChange="{{setDraft}}" onKeyDown="{{draftKey}}">
+      <button class="cs-edit-btn" type="button" onClick="{{saveEdit}}">Envoyer le code</button>
+      <button class="cs-edit-x" type="button" onClick="{{cancelEdit}}">Annuler</button>
+    </div>
+  </sc-if>
+
+  <div class="cs-otp {{otpCls}}" role="group" aria-label="Code à 6 chiffres" onPaste="{{paste}}">
+    <sc-for list="{{digits}}" as="d" hint-placeholder-count="6">
+      <input class="cs-box {{d.cls}}" type="text" inputMode="numeric" pattern="[0-9]*" autoComplete="{{d.ac}}" aria-label="{{d.label}}" value="{{d.value}}" disabled="{{d.disabled}}" style="animation-delay: {{d.delay}}" onChange="{{d.change}}" onKeyDown="{{d.key}}" onFocus="{{selectAll}}">
+    </sc-for>
+  </div>
+
+  <sc-if value="{{isError}}" hint-placeholder-val="{{ false }}">
+    <div class="cs-alert bad" role="alert"><svg class="cs-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{i.error}}"></path></svg><span><strong>Ce code est incorrect.</strong>Vérifiez les chiffres ou demandez un nouveau code.</span></div>
+  </sc-if>
+  <sc-if value="{{isExpired}}" hint-placeholder-val="{{ false }}">
+    <div class="cs-alert warn" role="alert"><svg class="cs-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{i.error}}"></path></svg><span><strong>Ce code a expiré.</strong>Pas d’inquiétude : demandez-en un nouveau, il arrive en quelques instants.</span></div>
+  </sc-if>
+  <sc-if value="{{hasNote}}" hint-placeholder-val="{{ false }}">
+    <div class="cs-alert good" role="status"><svg class="cs-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{i.mail}}"></path></svg><span>Nouveau code envoyé à {{shownEmail}}.</span></div>
+  </sc-if>
+
+  <sc-if value="{{showTimer}}" hint-placeholder-val="{{ true }}">
+    <div class="cs-time">
+      <div class="cs-time-row"><span>Le code expire dans</span><strong class="{{lowCls}}">{{countdown}}</strong></div>
+      <div class="cs-track" aria-hidden="true"><div class="cs-fill {{lowCls}}" style="width: {{timePct}}"></div></div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isExpired}}" hint-placeholder-val="{{ false }}">
+    <button class="cs-btn" type="button" onClick="{{resend}}">Recevoir un nouveau code</button>
+  </sc-if>
+  <sc-if value="{{notExpired}}" hint-placeholder-val="{{ true }}">
+    <button class="cs-btn" type="submit" aria-busy="{{busyAttr}}">
+      <sc-if value="{{busy}}" hint-placeholder-val="{{ false }}"><span class="cs-spin"></span></sc-if>
+      <span>{{btnLabel}}</span>
+    </button>
+    <div class="cs-resend">
+      <span>Rien reçu ? Pensez à vos spams.</span>
+      <button class="cs-link" type="button" onClick="{{resend}}" disabled="{{resendOff}}">{{resendLabel}}</button>
+    </div>
+  </sc-if>
+</form>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"title":{"editor":null},"email":{"editor":null},"demoState":{"editor":"enum","options":["input","error","expired"],"default":"input"},"verifyLabel":{"editor":null},"onVerified":{"editor":null},"onEmailChange":{"editor":null},"onEditEmail":{"editor":null},"$preview":{"width":480,"height":560}}'>
+const LIFE = 600;
+const COOLDOWN = 30;
+const EMPTY = () => ['', '', '', '', '', ''];
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    const demo = props.demoState;
+    this.state = {
+      digits: demo === 'error' ? ['1', '2', '3', '4', '5', '6'] : EMPTY(),
+      status: demo === 'error' ? 'error' : demo === 'expired' ? 'expired' : 'input',
+      secs: demo === 'expired' ? 0 : LIFE,
+      cooldown: demo === 'input' || !demo ? COOLDOWN : 0,
+      note: false, shake: false, tried: false,
+      editing: false, draft: '', draftBad: false, emailLocal: null
+    };
+  }
+  componentDidMount() {
+    this.clock = setInterval(() => {
+      const s = this.state;
+      const patch = {};
+      if (s.cooldown > 0) patch.cooldown = s.cooldown - 1;
+      if (s.status !== 'ok' && s.status !== 'expired' && s.secs > 0) {
+        patch.secs = s.secs - 1;
+        if (patch.secs === 0) patch.status = 'expired';
+      }
+      if (Object.keys(patch).length) this.setState(patch);
+    }, 1000);
+    if (!this.props.demoState && document.hasFocus()) {
+      setTimeout(() => {
+        const el = document.querySelector('[data-cs] .cs-box');
+        if (el) el.focus({ preventScroll: true });
+      }, 60);
+    }
+  }
+  componentWillUnmount() {
+    clearInterval(this.clock);
+    clearTimeout(this.vTimer);
+    clearTimeout(this.okTimer);
+    clearTimeout(this.noteTimer);
+    clearTimeout(this.clearTimer);
+  }
+  verify(digits, form) {
+    const code = digits.join('');
+    if (code.length < 6) { this.setState({ tried: true }); return; }
+    this.setState({ status: 'verifying', tried: false, note: false });
+    clearTimeout(this.vTimer);
+    this.vTimer = setTimeout(() => {
+      if (code === '000000') {
+        this.setState({ status: 'error', shake: true });
+        this.clearTimer = setTimeout(() => {
+          this.setState({ digits: EMPTY(), shake: false });
+          const first = form && form.querySelector('.cs-box');
+          if (first) first.focus({ preventScroll: true });
+        }, 900);
+      } else {
+        this.setState({ status: 'ok' });
+        this.okTimer = setTimeout(() => {
+          if (this.props.onVerified) this.props.onVerified();
+        }, 800);
+      }
+    }, 750);
+  }
+  focusBox(el, n) {
+    const boxes = el.closest('.cs-otp').querySelectorAll('.cs-box');
+    if (boxes[n]) boxes[n].focus();
+  }
+  doResend(form) {
+    this.setState({ digits: EMPTY(), status: 'input', secs: LIFE, cooldown: COOLDOWN, note: true, shake: false, tried: false });
+    clearTimeout(this.noteTimer);
+    this.noteTimer = setTimeout(() => this.setState({ note: false }), 4200);
+    setTimeout(() => {
+      const first = form && form.querySelector('.cs-box');
+      if (first) first.focus({ preventScroll: true });
+    }, 30);
+  }
+  renderVals() {
+    const s = this.state;
+    const p = this.props;
+    const email = s.emailLocal || p.email || 'awa.diallo@exemple.com';
+    const locked = s.status === 'verifying' || s.status === 'ok' || s.status === 'expired';
+    const mm = String(Math.floor(s.secs / 60)).padStart(2, '0');
+    const ss = String(s.secs % 60).padStart(2, '0');
+    const low = s.secs <= 60;
+    const draftOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s.draft.trim());
+    return {
+      title: p.title || 'Vérifiez votre e-mail',
+      shownEmail: email,
+      showEditLink: !s.editing,
+      editing: s.editing,
+      draft: s.draft,
+      editCls: s.draftBad ? 'is-err' : '',
+      setDraft: (e) => this.setState({ draft: e.target.value, draftBad: false }),
+      startEdit: () => {
+        if (p.onEditEmail) { p.onEditEmail(); return; }
+        this.setState({ editing: true, draft: email, draftBad: false });
+      },
+      cancelEdit: () => this.setState({ editing: false }),
+      saveEdit: (e) => {
+        if (!draftOk) { this.setState({ draftBad: true }); return; }
+        const next = s.draft.trim();
+        const form = e.currentTarget.closest('form');
+        this.setState({ editing: false, emailLocal: next });
+        if (p.onEmailChange) p.onEmailChange(next);
+        this.doResend(form);
+      },
+      draftKey: (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          const b = e.currentTarget.parentElement.querySelector('.cs-edit-btn');
+          if (b) b.click();
+        }
+      },
+      otpCls: s.shake ? 'shake' : '',
+      digits: s.digits.map((value, idx) => ({
+        value,
+        ac: idx === 0 ? 'one-time-code' : 'off',
+        label: 'Chiffre ' + (idx + 1) + ' sur 6',
+        disabled: locked,
+        delay: s.status === 'ok' ? idx * 55 + 'ms' : '0ms',
+        cls: s.status === 'ok' ? 'ok' : s.status === 'expired' ? 'off' : s.status === 'error' && value ? 'err' : value ? 'filled' : '',
+        change: (e) => {
+          const raw = e.target.value.replace(/\D/g, '');
+          const form = e.target.closest('form');
+          const digits = this.state.digits.slice();
+          if (raw.length > 1 && !digits[idx]) {
+            raw.slice(0, 6 - idx).split('').forEach((c, n) => { digits[idx + n] = c; });
+          } else {
+            digits[idx] = raw.slice(-1);
+          }
+          clearTimeout(this.clearTimer);
+          this.setState({ digits, status: 'input', tried: false, shake: false });
+          if (digits.join('').length === 6) {
+            this.verify(digits, form);
+          } else if (raw) {
+            const next = digits.findIndex((d, n) => n > idx && !d);
+            this.focusBox(e.target, next === -1 ? idx + 1 : next);
+          }
+        },
+        key: (e) => {
+          if (e.key === 'Backspace' && !e.target.value) { e.preventDefault(); this.focusBox(e.target, idx - 1); }
+          else if (e.key === 'ArrowLeft') { e.preventDefault(); this.focusBox(e.target, idx - 1); }
+          else if (e.key === 'ArrowRight') { e.preventDefault(); this.focusBox(e.target, idx + 1); }
+        }
+      })),
+      selectAll: (e) => e.target.select(),
+      paste: (e) => {
+        if (locked) return;
+        const text = (e.clipboardData.getData('text') || '').replace(/\D/g, '').slice(0, 6);
+        if (!text) return;
+        e.preventDefault();
+        const digits = EMPTY();
+        text.split('').forEach((c, n) => { digits[n] = c; });
+        this.setState({ digits, status: 'input', tried: false });
+        if (text.length === 6) this.verify(digits, e.currentTarget.closest('form'));
+      },
+      isError: s.status === 'error',
+      isExpired: s.status === 'expired',
+      notExpired: s.status !== 'expired',
+      hasNote: s.note,
+      showTimer: s.status !== 'expired' && s.status !== 'ok',
+      countdown: mm + ':' + ss,
+      timePct: (s.secs / LIFE) * 100 + '%',
+      lowCls: low ? 'low' : '',
+      busy: s.status === 'verifying',
+      busyAttr: s.status === 'verifying' ? 'true' : undefined,
+      btnLabel: s.status === 'verifying' ? 'Vérification…' : s.status === 'ok' ? 'Code confirmé' : s.tried ? 'Saisissez les 6 chiffres' : p.verifyLabel || 'Vérifier le code',
+      submit: (e) => {
+        e.preventDefault();
+        if (s.status === 'verifying' || s.status === 'ok') return;
+        this.verify(s.digits, e.currentTarget);
+      },
+      resend: (e) => this.doResend(e.currentTarget.closest('form')),
+      resendOff: s.cooldown > 0,
+      resendLabel: s.cooldown > 0 ? 'Renvoyer dans 0:' + String(s.cooldown).padStart(2, '0') : 'Renvoyer le code',
+      i: {
+        error: 'M11 15h2v2h-2v-2zm0-8h2v6h-2V7zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z',
+        mail: 'M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8l8 5 8-5v10zm-8-7L4 6h16l-8 5z'
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

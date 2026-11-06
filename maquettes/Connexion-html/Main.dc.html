@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Atlight · Connexion</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;0,900;1,900&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#007A59}a:hover{color:#00664B}
+.atl-login{container:page / inline-size;font-family:Roboto,system-ui,-apple-system,"Segoe UI",sans-serif;color:#212121;background:#fff;-webkit-font-smoothing:antialiased}
+.atl-login *{box-sizing:border-box}
+.atl-login :focus-visible{outline:2px solid #007A59;outline-offset:2px}
+.lg-grid{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,1fr);min-height:inherit}
+.lg-slot{display:flex;min-width:0}
+.lg-slot > *{flex:1;min-width:0;display:flex}
+.lg-ic{width:20px;height:20px;fill:currentColor;flex:none}
+.lg-mark{display:block;align-self:center;width:76px;height:76px;border-radius:18px;box-shadow:0 10px 24px rgba(0,100,74,.2);animation:lgPop .5s cubic-bezier(.2,1.4,.4,1) backwards}
+.lg-pane{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:44px 24px;background:#fff}
+.lg-col{width:100%;max-width:400px;display:flex;flex-direction:column;gap:18px}
+.lg-form{display:flex;flex-direction:column;gap:18px;animation:lgRise .38s cubic-bezier(.2,.8,.2,1) backwards}
+.lg-head{display:flex;flex-direction:column;gap:8px;margin-bottom:6px}
+.lg-title{margin:0;font-size:34px;line-height:1.1;font-weight:700;letter-spacing:-.01em}
+.lg-lead{margin:0;font-size:16px;line-height:1.5;color:#616161}
+.lg-field{display:flex;flex-direction:column;gap:7px}
+.lg-label{font-size:14px;font-weight:500;color:#616161}
+.lg-input-wrap{position:relative;display:flex}
+.lg-input{width:100%;height:50px;border:1px solid #BDBDBD;border-radius:10px;padding:0 14px;font:400 16px Roboto,system-ui,sans-serif;color:#212121;background:#fff;outline:none;transition:border-color .15s,box-shadow .15s}
+.atl-login .lg-input:focus-visible{outline:none}
+.lg-input::placeholder{color:#757575}
+.lg-input:hover{border-color:#9E9E9E}
+.lg-input:focus{border-color:#009970;box-shadow:0 0 0 .5px #009970,0 0 0 4px rgba(0,153,112,.13)}
+.lg-input.is-err{border-color:#C62828}
+.lg-input.is-err:focus{box-shadow:0 0 0 .5px #C62828,0 0 0 4px rgba(198,40,40,.12)}
+.lg-input.has-eye{padding-right:52px}
+.lg-eye{position:absolute;right:3px;top:3px;width:44px;height:44px;border:0;background:transparent;border-radius:8px;color:#616161;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .15s}
+.lg-eye:hover{background:#F5F5F5}
+.lg-err{margin:0;display:flex;align-items:center;gap:5px;font-size:13px;color:#C62828;animation:lgRise .2s ease-out backwards}
+.lg-err .lg-ic{width:16px;height:16px}
+.lg-row{display:flex;justify-content:flex-end;margin-top:-8px}
+.lg-link{background:none;border:0;padding:8px 0;font:500 14px Roboto,system-ui,sans-serif;color:#007A59;cursor:pointer;text-decoration:none;min-height:36px}
+.lg-link:hover{color:#00664B;text-decoration:underline}
+.lg-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:54px;border-radius:12px;border:0;background:#009970;font:700 19px Roboto,system-ui,sans-serif;color:#fff;cursor:pointer;text-decoration:none;transition:background .15s,transform .12s,box-shadow .15s;box-shadow:0 8px 18px rgba(0,153,112,.24)}
+a.lg-btn,a.lg-btn:hover{color:#fff}
+.lg-btn:hover{background:#008A65;box-shadow:0 10px 22px rgba(0,153,112,.3)}
+.lg-btn:active{transform:scale(.985)}
+.lg-hidden-submit{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.lg-sep{display:flex;align-items:center;gap:12px;color:#616161;font-size:14px}
+.lg-sep:before,.lg-sep:after{content:"";height:1px;flex:1;background:#E0E0E0}
+.lg-btn-2{display:flex;align-items:center;justify-content:center;height:50px;border-radius:12px;border:1.5px solid #007A59;color:#007A59;font-size:16px;font-weight:700;text-decoration:none;transition:background .15s,transform .12s}
+.lg-btn-2:hover{background:#EDF7EE;color:#00664B}
+.lg-btn-2:active{transform:scale(.985)}
+@keyframes lgPop{from{opacity:0;transform:scale(.55)}to{opacity:1;transform:none}}
+@keyframes lgRise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.lg-mark,.lg-form,.lg-err{animation:none}}
+@container page (max-width:900px){
+  .lg-grid{grid-template-columns:minmax(0,1fr);grid-template-rows:auto 1fr}
+  .lg-pane{justify-content:flex-start;padding:0 24px 28px}
+  .lg-mark{width:72px;height:72px;margin-top:-36px;position:relative;z-index:2;border:3px solid #fff;border-radius:20px}
+  .lg-title{font-size:28px}
+}
+</style>
+</helmet>
+<div class="atl-login" style="min-height: {{rootH}}">
+  <div class="lg-grid" style="min-height: {{rootH}}">
+    <div class="lg-slot">
+      <dc-import name="AuthPanel" sub="Publiez, connectez-vous, recrutez et faites-vous repérer, quel que soit votre sport." show-profile="{{ true }}" fill="{{ true }}" hint-size="100%,100%"></dc-import>
+    </div>
+    
+
+    <main class="lg-pane">
+      <div class="lg-col">
+        <img class="lg-mark" src="./assets/f84ce6484952aa053561c472341d1621.png" alt="Atlight" width="76" height="76">
+        <form class="lg-form" onSubmit="{{submit}}">
+          <div class="lg-head">
+            <h1 class="lg-title">Content de vous revoir</h1>
+            <p class="lg-lead">Retrouvez votre réseau, le Mercato et vos messages.</p>
+          </div>
+
+          <div class="lg-field">
+            <label class="lg-label" for="lg-username">Nom d’utilisateur</label>
+            <input id="lg-username" class="lg-input {{userCls}}" type="text" name="username" autoComplete="username" placeholder="ex. awa.diallo" value="{{username}}" onChange="{{setUsername}}" onBlur="{{blurUsername}}" aria-invalid="{{userInvalid}}" aria-describedby="lg-username-err">
+            <sc-if value="{{userErr}}" hint-placeholder-val="{{ false }}">
+              <p class="lg-err" id="lg-username-err" role="alert"><svg class="lg-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{i.error}}"></path></svg>Saisissez votre nom d’utilisateur.</p>
+            </sc-if>
+          </div>
+
+          <div class="lg-field">
+            <label class="lg-label" for="lg-password">Mot de passe</label>
+            <div class="lg-input-wrap">
+              <input id="lg-password" class="lg-input has-eye {{passCls}}" type="{{passType}}" name="password" autoComplete="current-password" placeholder="Votre mot de passe" value="{{password}}" onChange="{{setPassword}}" onBlur="{{blurPassword}}" aria-invalid="{{passInvalid}}" aria-describedby="lg-password-err">
+              <button class="lg-eye" type="button" onClick="{{toggleShow}}" aria-label="{{eyeLabel}}"><svg class="lg-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{eyeIcon}}"></path></svg></button>
+            </div>
+            <sc-if value="{{passErr}}" hint-placeholder-val="{{ false }}">
+              <p class="lg-err" id="lg-password-err" role="alert"><svg class="lg-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{i.error}}"></path></svg>Saisissez votre mot de passe.</p>
+            </sc-if>
+          </div>
+
+          <div class="lg-row"><a class="lg-link" href="MotDePasse.dc.html">Mot de passe oublié ?</a></div>
+
+          <sc-if value="{{canGo}}" hint-placeholder-val="{{ false }}">
+            <button class="lg-hidden-submit" type="submit" tabIndex="-1" aria-hidden="true"></button>
+            <a class="lg-btn" data-go="1" href="Accueil.dc.html">Se connecter</a>
+          </sc-if>
+          <sc-if value="{{cannotGo}}" hint-placeholder-val="{{ true }}">
+            <button class="lg-btn" type="submit">Se connecter</button>
+          </sc-if>
+
+          <div class="lg-sep">Nouveau sur Atlight ?</div>
+          <a class="lg-btn-2" href="Inscription.dc.html">Créer un compte</a>
+        </form>
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"embedHeight":{"editor":null},"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { username: '', password: '', show: false, touchedU: false, touchedP: false, submitted: false };
+  }
+  renderVals() {
+    const s = this.state;
+    const i = {
+      error: 'M11 15h2v2h-2v-2zm0-8h2v6h-2V7zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z'
+    };
+    const eye = 'M12 6a9.77 9.77 0 0 1 8.82 5.5C19.17 14.87 15.79 17 12 17s-7.17-2.13-8.82-5.5A9.77 9.77 0 0 1 12 6m0-2C7 4 2.73 7.11 1 11.5 2.73 15.89 7 19 12 19s9.27-3.11 11-7.5C21.27 7.11 17 4 12 4zm0 5a2.5 2.5 0 0 1 0 5 2.5 2.5 0 0 1 0-5m0-2c-2.48 0-4.5 2.02-4.5 4.5S9.52 16 12 16s4.5-2.02 4.5-4.5S14.48 7 12 7z';
+    const eyeOff = 'M12 6a9.77 9.77 0 0 1 8.82 5.5 9.647 9.647 0 0 1-2.41 3.12l1.41 1.41c1.39-1.23 2.49-2.77 3.18-4.53C21.27 7.11 17 4 12 4c-1.27 0-2.49.2-3.64.57l1.65 1.65C10.66 6.09 11.32 6 12 6zm-1.07 1.14L13 9.21c.57.25 1.03.71 1.28 1.28l2.07 2.07c.08-.34.14-.7.14-1.07C16.5 9.01 14.48 7 12 7c-.37 0-.72.05-1.07.14zM2.01 3.87l2.68 2.68A11.738 11.738 0 0 0 1 11.5C2.73 15.89 7 19 12 19c1.52 0 2.98-.29 4.32-.82l3.42 3.42 1.41-1.41L3.42 2.45 2.01 3.87zm7.5 7.5 2.61 2.61c-.04.01-.08.02-.12.02a2.5 2.5 0 0 1-2.5-2.5c0-.05.01-.08.01-.13zm-3.4-3.4 1.75 1.75a4.6 4.6 0 0 0-.36 1.78 4.507 4.507 0 0 0 6.27 4.14l.98.98c-.88.24-1.8.38-2.75.38a9.77 9.77 0 0 1-8.82-5.5c.7-1.43 1.72-2.61 2.93-3.53z';
+    const uOk = s.username.trim().length > 0;
+    const pOk = s.password.length > 0;
+    const userErr = !uOk && (s.touchedU || s.submitted);
+    const passErr = !pOk && (s.touchedP || s.submitted);
+    const canGo = uOk && pOk;
+    return {
+      i,
+      rootH: this.props.embedHeight ?? '100vh',
+      username: s.username,
+      password: s.password,
+      passType: s.show ? 'text' : 'password',
+      eyeIcon: s.show ? eyeOff : eye,
+      eyeLabel: s.show ? 'Masquer le mot de passe' : 'Afficher le mot de passe',
+      userErr, passErr, canGo,
+      cannotGo: !canGo,
+      userCls: userErr ? 'is-err' : '',
+      passCls: passErr ? 'is-err' : '',
+      userInvalid: userErr ? 'true' : undefined,
+      passInvalid: passErr ? 'true' : undefined,
+      setUsername: (e) => this.setState({ username: e.target.value }),
+      setPassword: (e) => this.setState({ password: e.target.value }),
+      blurUsername: () => this.setState({ touchedU: true }),
+      blurPassword: () => this.setState({ touchedP: true }),
+      toggleShow: () => this.setState({ show: !this.state.show }),
+      submit: (e) => {
+        e.preventDefault();
+        if (canGo) {
+          const go = e.currentTarget.querySelector('[data-go]');
+          if (go) go.click();
+        } else {
+          this.setState({ submitted: true });
+        }
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

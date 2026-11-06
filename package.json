@@ -6,21 +6,60 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "typecheck": "next typegen && tsc --noEmit",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "i18n:sync": "node scripts/arb-to-json.mjs",
+    "i18n:check": "node scripts/arb-to-json.mjs --check",
+    "ci": "npm run i18n:check && npm run lint && npm run typecheck && npm run test && npm run build"
   },
   "dependencies": {
+    "@hookform/resolvers": "^7.0.3",
+    "@sentry/nextjs": "^11.11.0",
+    "@stomp/stompjs": "^7.5.0",
+    "@tanstack/react-query": "^5.106.1",
+    "dompurify": "^3.4.17",
+    "downshift": "^9.4.0",
+    "emoji-picker-react": "^5.1.4",
+    "firebase": "^13.2.0",
+    "material-symbols": "^0.48.3",
     "next": "16.4.5",
+    "next-intl": "^4.14.9",
     "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react-dom": "19.3.0",
+    "react-easy-crop": "^6.2.4",
+    "react-hook-form": "^7.91.0",
+    "server-only": "^0.0.1",
+    "zod": "^4.6.7",
+    "zustand": "^5.0.16"
   },
   "devDependencies": {
+    "@playwright/test": "^1.65.0",
     "@tailwindcss/turbopack": "^4",
-    "@types/node": "^20",
+    "@tanstack/react-query-devtools": "^5.106.1",
+    "@testing-library/dom": "^10.4.2",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.8",
+    "@types/node": "^24.19.2",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vitejs/plugin-react": "^6.2.1",
     "eslint": "^9",
     "eslint-config-next": "16.4.5",
+    "jsdom": "^31.0.0",
+    "prettier": "^3.9.10",
+    "prettier-plugin-tailwindcss": "^0.8.1",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vite": "^8.3.6",
+    "vitest": "^5.1.0"
+  },
+  "engines": {
+    "node": ">=24"
   }
 }
