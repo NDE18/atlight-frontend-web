@@ -1,0 +1,22 @@
+# Contexte de build Docker : uniquement ce qu'il faut pour `next build`.
+.git
+.github
+.next
+node_modules
+coverage
+test-results
+playwright-report
+blob-report
+# Aucun fichier .env dans l'image : les valeurs publiques arrivent en --build-arg.
+.env*
+!.env.example
+*.tsbuildinfo
+next-env.d.ts
+Atlight.pdf
+maquettes
+docs
+e2e
+deploy
+Dockerfile
+.dockerignore
+README.md

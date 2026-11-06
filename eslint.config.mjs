@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Maquettes exportées (React embarqué) : références visuelles, pas du code de l'application.
+    "maquettes/**",
   ]),
 ]);
 

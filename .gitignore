@@ -50,3 +50,6 @@ next-env.d.ts
 
 # sentry
 .env.sentry-build-plugin
+
+# files
+Atlight.pdf

@@ -1,12 +1,15 @@
+import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
+import { LoginScreen } from "@/features/auth/components/login-screen";
+import { safeNextPath } from "@/shared/utils/safe-next";
 
-// Connexion (AUTH-03, lot 1). Écran provisoire.
-export default async function LoginPage() {
+export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations();
-  return (
-    <main className="mx-auto flex min-h-dvh max-w-md flex-col justify-center p-4">
-      <h1 className="text-primary text-2xl font-bold">atlight</h1>
-      <p className="text-grey-700 mt-2">{t("login")}</p>
-    </main>
-  );
+  return { title: t("login") };
+}
+
+// Connexion (AUTH-03). `next` : page privée demandée avant la redirection par le proxy.
+export default async function LoginPage({ searchParams }: PageProps<"/login">) {
+  const { next } = await searchParams;
+  return <LoginScreen next={safeNextPath(typeof next === "string" ? next : null)} />;
 }

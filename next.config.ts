@@ -54,8 +54,12 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  // Image Docker : serveur Node autonome (.next/standalone). `next start` reste utilisable en local.
+  output: process.env.NEXT_OUTPUT === "standalone" ? "standalone" : undefined,
   reactStrictMode: true,
   poweredByHeader: false,
+  // Pas de bouton « N » de Next.js à l'écran en développement ; les erreurs restent affichées.
+  devIndicators: false,
   // Cache Components désactivé : la session (cookie) et la langue sont lues à chaque requête.
   // Voir README, section « Choix techniques ».
   cacheComponents: false,

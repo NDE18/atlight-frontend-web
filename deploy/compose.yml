@@ -1,0 +1,21 @@
+# Web Atlight sur le VPS (Docker Compose). Les valeurs viennent du fichier .env écrit par deploy.sh.
+# Le conteneur n'écoute que sur 127.0.0.1 : seul nginx (web.atlight.fr) le rend public.
+name: atlight-web
+
+services:
+  web:
+    image: ${WEB_IMAGE:?WEB_IMAGE manquant}:${WEB_IMAGE_TAG:?WEB_IMAGE_TAG manquant}
+    container_name: atlight-web
+    restart: always
+    init: true
+    environment:
+      APP_VERSION: ${WEB_IMAGE_TAG}
+    ports:
+      - "127.0.0.1:${WEB_PORT:-3100}:3000"
+    # Le backend et MySQL tournent sur la même machine : le web ne doit pas les priver de mémoire.
+    mem_limit: 1g
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"

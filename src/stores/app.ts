@@ -9,7 +9,13 @@ interface AppState {
   upsellOpen: boolean;
   openUpsell: () => void;
   closeUpsell: () => void;
+  /** Message bref en bas de l'écran (« Bientôt disponible sur le web », « Lien copié »…). */
+  toast: string | null;
+  showToast: (message: string) => void;
+  hideToast: () => void;
 }
+
+let toastTimer: ReturnType<typeof setTimeout> | undefined;
 
 export const useAppStore = create<AppState>()((set) => ({
   unreadNotifications: 0,
@@ -17,4 +23,14 @@ export const useAppStore = create<AppState>()((set) => ({
   upsellOpen: false,
   openUpsell: () => set({ upsellOpen: true }),
   closeUpsell: () => set({ upsellOpen: false }),
+  toast: null,
+  showToast: (toast) => {
+    clearTimeout(toastTimer);
+    set({ toast });
+    toastTimer = setTimeout(() => set({ toast: null }), 3200);
+  },
+  hideToast: () => {
+    clearTimeout(toastTimer);
+    set({ toast: null });
+  },
 }));
