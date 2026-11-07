@@ -80,8 +80,16 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Clé Firebase web
+        env:
+          FIREBASE_API_KEY: ${{ secrets.NEXT_PUBLIC_FIREBASE_API_KEY }}
+        run: |
+          if [ -z "$FIREBASE_API_KEY" ]; then
+            echo "::warning::Secret NEXT_PUBLIC_FIREBASE_API_KEY absent : notifications web désactivées dans cette image."
+          fi
       # Valeurs publiques, figées dans le bundle. Par défaut, la config « web » de Firebase du mobile
-      # (lib/firebase_options.dart) ; une variable du dépôt du même nom la remplace.
+      # (lib/firebase_options.dart) ; une variable du dépôt du même nom la remplace. La clé d'API
+      # passe par un secret : masquée dans les journaux, absente du dépôt.
       - name: Build
         uses: docker/build-push-action@v6
         with:
@@ -97,7 +105,7 @@ jobs:
             NEXT_PUBLIC_API_BASE_URL=${{ env.NEXT_PUBLIC_API_BASE_URL }}
             NEXT_PUBLIC_WS_URL=${{ env.NEXT_PUBLIC_WS_URL }}
             NEXT_PUBLIC_SHARE_BASE_URL=${{ env.NEXT_PUBLIC_SHARE_BASE_URL }}
-            NEXT_PUBLIC_FIREBASE_API_KEY=${{ vars.NEXT_PUBLIC_FIREBASE_API_KEY || 'AIzaSyCqaSzoAvy9fgeJyOcbrkEet1mj2-h4bu8' }}
+            NEXT_PUBLIC_FIREBASE_API_KEY=${{ secrets.NEXT_PUBLIC_FIREBASE_API_KEY }}
             NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=${{ vars.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || 'atlight-app.firebaseapp.com' }}
             NEXT_PUBLIC_FIREBASE_PROJECT_ID=${{ vars.NEXT_PUBLIC_FIREBASE_PROJECT_ID || 'atlight-app' }}
             NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=${{ vars.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || 'atlight-app.firebasestorage.app' }}

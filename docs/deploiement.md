@@ -63,19 +63,22 @@ _Settings → Secrets and variables → Actions._
 
 **Secrets** : mêmes noms que dans le dépôt du backend. Les secrets GitHub sont propres à chaque dépôt : ceux d'`atlight-backend` ne sont pas visibles ici, ils doivent exister aussi dans `atlight-frontend-web` (secrets du dépôt, ou de son environnement `production`).
 
-| Nom                       | Obligatoire             | Contenu                                                                  |
-| ------------------------- | ----------------------- | ------------------------------------------------------------------------ |
-| `CONTABO_HOST`            | non (`157.173.118.249`) | Adresse du VPS, comme pour le backend                                    |
-| `CONTABO_SSH_USER`        | oui                     | Utilisateur SSH, comme pour le backend                                   |
-| `CONTABO_SSH_PASSWORD`    | l'un des deux           | Mot de passe SSH, comme pour le backend                                  |
-| `CONTABO_SSH_KEY`         | l'un des deux           | Clé privée `atlight-web-deploy`, prioritaire sur le mot de passe         |
-| `CONTABO_SSH_PORT`        | non (22)                | Port SSH, comme pour le backend                                          |
-| `CONTABO_SSH_KNOWN_HOSTS` | recommandé              | Sortie de `ssh-keyscan` ; sans lui, l'empreinte est acceptée à l'aveugle |
-| `SENTRY_AUTH_TOKEN`       | non                     | Envoi des source maps à Sentry                                           |
+| Nom                            | Obligatoire             | Contenu                                                                                                 |
+| ------------------------------ | ----------------------- | ------------------------------------------------------------------------------------------------------- |
+| `CONTABO_HOST`                 | non (`157.173.118.249`) | Adresse du VPS, comme pour le backend                                                                   |
+| `CONTABO_SSH_USER`             | oui                     | Utilisateur SSH, comme pour le backend                                                                  |
+| `CONTABO_SSH_PASSWORD`         | l'un des deux           | Mot de passe SSH, comme pour le backend                                                                 |
+| `CONTABO_SSH_KEY`              | l'un des deux           | Clé privée `atlight-web-deploy`, prioritaire sur le mot de passe                                        |
+| `CONTABO_SSH_PORT`             | non (22)                | Port SSH, comme pour le backend                                                                         |
+| `CONTABO_SSH_KNOWN_HOSTS`      | recommandé              | Sortie de `ssh-keyscan` ; sans lui, l'empreinte est acceptée à l'aveugle                                |
+| `SENTRY_AUTH_TOKEN`            | non                     | Envoi des source maps à Sentry                                                                          |
+| `NEXT_PUBLIC_FIREBASE_API_KEY` | conseillé               | Clé « web » de Firebase (`apiKey` de `lib/firebase_options.dart`) ; sans elle, pas de notifications web |
+
+La clé Firebase web n'est pas secrète au sens strict : elle finit dans le JavaScript servi à tous les navigateurs (et dans `/firebase-messaging-sw.js`). Elle passe quand même par un secret pour rester hors du dépôt public et des journaux. Sa vraie protection est sa restriction dans Google Cloud (voir ci-dessous).
 
 **Variables** : aucune n'est obligatoire. Le déploiement du backend n'en utilise pas non plus.
 
-La config « web » de Firebase (clé d'API, identifiant d'application) reprend par défaut celle du mobile (`lib/firebase_options.dart`), identique à `.env.local`. Ces valeurs sont publiques : elles finissent dans le JavaScript servi à tous les navigateurs. Une variable du même nom les remplace au besoin.
+Les autres valeurs Firebase (identifiant d'application, projet, expéditeur) reprennent par défaut celles du mobile (`lib/firebase_options.dart`), identiques à `.env.local`. Une variable du même nom les remplace au besoin.
 
 | Nom                                                      | Quand la créer                                                  |
 | -------------------------------------------------------- | --------------------------------------------------------------- |
@@ -84,6 +87,11 @@ La config « web » de Firebase (clé d'API, identifiant d'application) reprend 
 | `NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID`                    | Google Analytics (vide aujourd'hui, comme sur le mobile)        |
 | `NEXT_PUBLIC_SENTRY_DSN`, `SENTRY_ORG`, `SENTRY_PROJECT` | Si Sentry est utilisé                                           |
 | `WEB_PORT`                                               | Si le port local 3100 est déjà pris sur le VPS                  |
+
+**Restriction de la clé Firebase web** (console Google Cloud, projet `atlight-app` → _APIs & Services → Credentials_ → la clé « Browser key », qui commence par `AIzaSyCqaSzo`) :
+
+- _Application restrictions_ → **Websites** : `https://web.atlight.fr/*`, `http://localhost:3000/*`, `http://localhost:3001/*`, plus le domaine d'un éventuel build web du mobile. Les apps Android et iOS ont leurs propres clés : elles ne sont pas concernées.
+- _API restrictions_ → **Restrict key** : seulement les API qu'utilise le web, c'est-à-dire les notifications FCM (**Firebase Installations API** et **FCM Registration API**). Aucune API payante (Gemini / Generative Language, Maps…) : c'est le vrai risque d'une clé publique non restreinte.
 
 Le backend n'a rien à changer pour le lot 1 : le BFF l'appelle de serveur à serveur, sans en-tête `Origin`, donc la liste CORS ne joue pas. Le jour où le navigateur ouvrira le WebSocket (`wss://atlight.fr/ws`), il faudra ajouter `https://web.atlight.fr` à `setAllowedOrigins` dans `WebSocketConfig.java` (et à la liste CORS de `WebSecurityConfiguration.java` si le navigateur appelle l'API en direct). `APP_PUBLIC_BASE_URL` (liens de partage `/p/*`) reste `https://atlight.fr`, comme `NEXT_PUBLIC_SHARE_BASE_URL`.
 
