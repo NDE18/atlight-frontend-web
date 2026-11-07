@@ -80,13 +80,13 @@ La clé Firebase web n'est pas secrète au sens strict : elle finit dans le Java
 
 Les autres valeurs Firebase (identifiant d'application, projet, expéditeur) reprennent par défaut celles du mobile (`lib/firebase_options.dart`), identiques à `.env.local`. Une variable du même nom les remplace au besoin.
 
-| Nom                                                      | Quand la créer                                                  |
-| -------------------------------------------------------- | --------------------------------------------------------------- |
-| `LETSENCRYPT_EMAIL`                                      | Conseillé : adresse des alertes d'expiration du certificat      |
-| `NEXT_PUBLIC_FIREBASE_VAPID_KEY`                         | Notifications Web Push (clé à générer dans la console Firebase) |
-| `NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID`                    | Google Analytics (vide aujourd'hui, comme sur le mobile)        |
-| `NEXT_PUBLIC_SENTRY_DSN`, `SENTRY_ORG`, `SENTRY_PROJECT` | Si Sentry est utilisé                                           |
-| `WEB_PORT`                                               | Si le port local 3100 est déjà pris sur le VPS                  |
+| Nom                                                      | Quand la créer                                                                                                                                                           |
+| -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `LETSENCRYPT_EMAIL`                                      | Facultatif : adresse d'équipe du compte Let's Encrypt (avis importants). Ignorée si certbot a déjà un compte sur le serveur ; visible dans les journaux publics de la CI |
+| `NEXT_PUBLIC_FIREBASE_VAPID_KEY`                         | Notifications Web Push (clé à générer dans la console Firebase)                                                                                                          |
+| `NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID`                    | Google Analytics (vide aujourd'hui, comme sur le mobile)                                                                                                                 |
+| `NEXT_PUBLIC_SENTRY_DSN`, `SENTRY_ORG`, `SENTRY_PROJECT` | Si Sentry est utilisé                                                                                                                                                    |
+| `WEB_PORT`                                               | Si le port local 3100 est déjà pris sur le VPS                                                                                                                           |
 
 **Restriction de la clé Firebase web** (console Google Cloud, projet `atlight-app` → _APIs & Services → Credentials_ → la clé « Browser key », qui commence par `AIzaSyCqaSzo`) :
 

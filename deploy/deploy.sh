@@ -145,8 +145,16 @@ fi
 
 log "nginx"
 install_site site.conf
-curl -fsS --max-time 10 --resolve "$DOMAIN:443:127.0.0.1" "https://$DOMAIN/api/health" >/dev/null
-echo "https://$DOMAIN répond"
+# `systemctl reload` rend la main avant que nginx ait chargé la nouvelle configuration :
+# on laisse quelques secondes avant de conclure (sinon l'ancien certificat peut encore répondre).
+for i in $(seq 1 10); do
+  if curl -fsS --max-time 10 --resolve "$DOMAIN:443:127.0.0.1" "https://$DOMAIN/api/health" >/dev/null; then
+    echo "https://$DOMAIN répond"
+    break
+  fi
+  [ "$i" -lt 10 ] || exit 1
+  sleep 2
+done
 
 # --- Ménage : on garde l'image en service et la précédente (retour arrière) --------------------
 
