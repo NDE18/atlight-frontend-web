@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SHARE_BASE_URL ?? "https://atlight.fr"),
   title: { default: "Atlight", template: "%s · Atlight" },
   description: "Connect. Share. Grow.",
-  icons: { icon: "/icons/app-icon.png" },
+  // Icônes : fichiers favicon.ico, icon.png et apple-icon.png de src/app (logo Atlight).
   // Espace connecté non indexé ; les pages publiques /p/* rétablissent l'indexation.
   robots: { index: false, follow: false },
 };

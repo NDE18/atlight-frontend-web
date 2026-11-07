@@ -1,12 +1,13 @@
+import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
+import { HomePage } from "@/features/feed/components/home-page";
 
-// Fil d'actualité (lot 2). Écran provisoire : le shell responsive arrive au lot 1.
-export default async function FeedPage() {
+export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations();
-  return (
-    <main className="max-w-content mx-auto p-4">
-      <h1 className="text-primary text-2xl font-bold">atlight</h1>
-      <p className="text-grey-700 mt-2">{t("home")}</p>
-    </main>
-  );
+  return { title: t("home") };
+}
+
+// Accueil (maquette Accueil2) : fil, stories et tendances en lecture ; colonne de droite.
+export default function Page() {
+  return <HomePage />;
 }

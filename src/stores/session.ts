@@ -7,13 +7,20 @@ import { createJSONStorage, persist } from "zustand/middleware";
  */
 export interface SessionUser {
   userId: number;
-  personId: number;
+  /** Absent pour un compte ORGANISM, qui n'a pas de Person. */
+  personId: number | null;
   username: string;
-  firstname?: string;
-  lastname?: string;
+  firstname?: string | null;
+  lastname?: string | null;
   role?: string;
   picture?: string | null;
   coverPicture?: string | null;
+  sport?: string | null;
+  clubName?: string | null;
+  residence?: string | null;
+  /** Badge vérifié et cadre « Open to tryouts », relus sur la fiche Person. */
+  verified?: boolean;
+  openToTryouts?: boolean;
 }
 
 interface SessionState {
@@ -22,6 +29,8 @@ interface SessionState {
   patchUser: (patch: Partial<SessionUser>) => void;
   clear: () => void;
 }
+
+export const SESSION_STORAGE_KEY = "atlight.session";
 
 export const useSessionStore = create<SessionState>()(
   persist(
@@ -32,7 +41,7 @@ export const useSessionStore = create<SessionState>()(
       clear: () => set({ user: null }),
     }),
     {
-      name: "atlight.session",
+      name: SESSION_STORAGE_KEY,
       storage: createJSONStorage(() => localStorage),
     },
   ),

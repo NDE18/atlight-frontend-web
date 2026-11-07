@@ -1,0 +1,4 @@
+# Fichiers exécutés ou lus sur le serveur Linux : fins de ligne LF, même depuis Windows.
+*.sh text eol=lf
+deploy/** text eol=lf
+Dockerfile text eol=lf

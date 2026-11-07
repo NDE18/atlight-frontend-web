@@ -10,7 +10,7 @@ test.describe("langue du navigateur", () => {
     test.use({ locale: "fr-FR" });
     test("affiche la connexion en français", async ({ page }) => {
       await page.goto("/login");
-      await expect(page.getByText("Connexion")).toBeVisible();
+      await expect(page.getByRole("heading", { name: "Content de vous revoir" })).toBeVisible();
     });
   });
 
@@ -18,9 +18,15 @@ test.describe("langue du navigateur", () => {
     test.use({ locale: "en-US" });
     test("affiche la connexion en anglais", async ({ page }) => {
       await page.goto("/login");
-      await expect(page.getByText("Login")).toBeVisible();
+      await expect(page.getByRole("heading", { name: "Welcome back" })).toBeVisible();
     });
   });
+});
+
+test("la sonde de santé répond sans session", async ({ request }) => {
+  const response = await request.get("/api/health");
+  expect(response.ok()).toBe(true);
+  expect(await response.json()).toMatchObject({ status: "ok" });
 });
 
 test("assetlinks.json est servi pour Android App Links", async ({ request }) => {

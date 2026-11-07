@@ -12,6 +12,22 @@ export function backendUrl(path: string): string {
   return `${env.apiBaseUrl.replace(/\/$/, "")}${path.startsWith("/") ? path : `/${path}`}`;
 }
 
+/**
+ * En-têtes du navigateur repris vers le backend. L'IP du client part dans X-Forwarded-For :
+ * le limiteur de débit du backend (RateLimiterFilter) compte par IP, et sans elle tous les
+ * utilisateurs du web partageraient le quota du serveur Next.js.
+ */
+export function forwardedHeaders(request: Request, names: readonly string[] = []): Headers {
+  const headers = new Headers();
+  for (const name of ["accept", "accept-language", ...names]) {
+    const value = request.headers.get(name);
+    if (value) headers.set(name, value);
+  }
+  const clientIp = request.headers.get("x-forwarded-for") ?? request.headers.get("x-real-ip");
+  if (clientIp) headers.set("x-forwarded-for", clientIp);
+  return headers;
+}
+
 export function setSessionCookie(response: NextResponse, token: string): void {
   response.cookies.set(SESSION_COOKIE, token, {
     httpOnly: true,
@@ -31,11 +47,13 @@ export function clearSessionCookie(response: NextResponse): void {
  * Le JWT renvoyé (en-tête Authorization ou champ `token`) est placé dans le cookie HttpOnly
  * et retiré du corps transmis au navigateur.
  */
-export async function relayAuthentication(path: string, body: unknown): Promise<NextResponse> {
+export async function relayAuthentication(request: Request, path: string): Promise<NextResponse> {
+  const headers = forwardedHeaders(request);
+  headers.set("Content-Type", "application/json");
   const upstream = await fetch(backendUrl(path), {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
+    headers,
+    body: await request.text(),
     cache: "no-store",
   });
 

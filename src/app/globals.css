@@ -2,17 +2,32 @@
 @import "material-symbols/outlined.css";
 
 /*
- * Design system Atlight — valeurs reprises de lib/Utils/constant.dart (cahier technique, section 10).
- * Pas de mode sombre, comme le mobile.
+ * Design system Atlight — valeurs reprises de lib/Utils/constant.dart (cahier technique, section 10)
+ * et des maquettes validées du lot 1. Pas de mode sombre, comme le mobile.
  */
 @theme {
   --color-primary: #009970;
+  --color-primary-hover: #008a65;
+  /* Liens, focus et texte vert sur fond clair : contraste AA. */
+  --color-primary-strong: #007a59;
+  --color-primary-dark: #00664b;
+  --color-primary-ink: #00392b;
   --color-primary-10: rgb(0 153 112 / 0.1);
   --color-secondary: #9aeed7;
   --color-third: #edf7ee;
   --color-code-bg: #e6f5f1;
   --color-error: #f44336;
   --color-premium: #daa520;
+
+  /* Erreurs de formulaire et alertes (maquettes du lot 1) */
+  --color-danger: #c62828;
+  --color-danger-bg: #fdecea;
+  --color-danger-ink: #8e1c1c;
+  --color-badge: #d32f2f;
+  --color-warn: #e08a00;
+  --color-warn-strong: #9a5b00;
+  --color-warn-bg: #fff4d6;
+  --color-warn-ink: #5c4300;
 
   --color-grey-50: #fafafa;
   --color-grey-100: #f5f5f5;
@@ -48,6 +63,115 @@
   --spacing-sidebar: 240px;
   --spacing-rail: 72px;
   --container-content: 860px;
+
+  --shadow-button: 0 8px 18px rgb(0 153 112 / 0.24);
+  --shadow-button-hover: 0 10px 22px rgb(0 153 112 / 0.3);
+  --shadow-mark: 0 10px 24px rgb(0 100 74 / 0.2);
+  --shadow-panel-card: 0 18px 44px rgb(0 60 44 / 0.3);
+  --shadow-popover: 0 18px 44px rgb(0 0 0 / 0.2);
+  --shadow-field-focus: 0 0 0 0.5px var(--color-primary), 0 0 0 4px rgb(0 153 112 / 0.13);
+  --shadow-field-error: 0 0 0 0.5px var(--color-danger), 0 0 0 4px rgb(198 40 40 / 0.12);
+
+  --animate-rise: rise 0.38s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+  --animate-rise-fast: rise 0.2s ease-out backwards;
+  --animate-pop: pop 0.5s cubic-bezier(0.2, 1.4, 0.4, 1) backwards;
+  --animate-fade: fade 0.2s ease-out backwards;
+  --animate-step-forward: step-forward 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+  --animate-step-backward: step-backward 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+  --animate-shake: shake 0.42s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-ticker: ticker 46s linear infinite;
+  --animate-word: word 0.55s cubic-bezier(0.2, 0.9, 0.2, 1);
+  --animate-spark: spark 0.7s cubic-bezier(0.2, 1.4, 0.4, 1) backwards;
+  --animate-drawer: drawer 0.24s cubic-bezier(0.2, 0.9, 0.3, 1) backwards;
+  --animate-menu: menu 0.18s ease-out backwards;
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+  }
+  @keyframes pop {
+    from {
+      opacity: 0;
+      transform: scale(0.55);
+    }
+  }
+  @keyframes fade {
+    from {
+      opacity: 0;
+    }
+  }
+  @keyframes step-forward {
+    from {
+      opacity: 0;
+      transform: translateX(32px);
+    }
+  }
+  @keyframes step-backward {
+    from {
+      opacity: 0;
+      transform: translateX(-32px);
+    }
+  }
+  @keyframes shake {
+    10%,
+    90% {
+      transform: translateX(-2px);
+    }
+    20%,
+    80% {
+      transform: translateX(4px);
+    }
+    30%,
+    50%,
+    70% {
+      transform: translateX(-7px);
+    }
+    40%,
+    60% {
+      transform: translateX(7px);
+    }
+  }
+  @keyframes float {
+    50% {
+      transform: translateY(-6px);
+    }
+  }
+  @keyframes ticker {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  @keyframes word {
+    from {
+      opacity: 0;
+      transform: translateY(70%);
+    }
+  }
+  @keyframes spark {
+    from {
+      opacity: 0;
+      transform: translate(var(--dx), var(--dy)) scale(0.3);
+    }
+  }
+  @keyframes drawer {
+    from {
+      transform: translateX(-100%);
+    }
+  }
+  @keyframes menu {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+  }
+  @keyframes draw {
+    from {
+      stroke-dashoffset: 1;
+    }
+  }
 }
 
 @layer base {
@@ -60,7 +184,7 @@
   }
 
   :focus-visible {
-    @apply outline-primary outline-2 outline-offset-2;
+    @apply outline-primary-strong outline-2 outline-offset-2;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -69,6 +193,30 @@
     *::after {
       animation-duration: 0.01ms !important;
       transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  /* Changement d'étape (AUTH-01) : glissement horizontal, simple fondu si mouvement réduit. */
+  @media (prefers-reduced-motion: reduce) {
+    .step-panel {
+      animation-name: fade !important;
+      animation-duration: 0.2s !important;
+    }
+  }
+
+  /* Tracés des terrains du panneau d'authentification (pathLength = 1). */
+  .court-scene * {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 0;
+  }
+  .court-scene[data-on="true"] * {
+    animation: draw 1.7s cubic-bezier(0.3, 0.7, 0.2, 1) backwards;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .court-scene[data-on="true"] * {
+      animation: none;
     }
   }
 }

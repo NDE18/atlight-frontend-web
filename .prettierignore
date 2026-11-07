@@ -4,3 +4,6 @@ messages
 package-lock.json
 coverage
 playwright-report
+# Maquettes exportées et politique de confidentialité recopiée du mobile : non reformatées.
+maquettes
+public/legal

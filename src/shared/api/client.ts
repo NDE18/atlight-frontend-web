@@ -20,6 +20,11 @@ export class ApiError extends Error {
   get isPaymentRequired() {
     return this.status === 402;
   }
+
+  /** Code fonctionnel du backend (`BAD_CREDENTIALS`, `CODE_EXPIRED`…), s'il y en a un. */
+  get code(): string | undefined {
+    return this.body?.error;
+  }
 }
 
 type Query = Record<string, string | number | boolean | undefined | null>;
@@ -28,6 +33,11 @@ export interface RequestOptions extends Omit<RequestInit, "body"> {
   query?: Query;
   /** Objet sérialisé en JSON, ou FormData pour les envois multipart. */
   body?: unknown;
+  /**
+   * Endpoint public d'authentification (inscription, codes e-mail, mot de passe oublié) :
+   * passe par /api/public/*, sans JWT, et un 401 n'y déconnecte personne.
+   */
+  anonymous?: boolean;
 }
 
 /**
@@ -38,8 +48,9 @@ export async function apiClient<T = unknown>(
   path: string,
   options: RequestOptions = {},
 ): Promise<T> {
-  const { query, body, headers, ...init } = options;
-  const url = new URL(`/api/backend/${path.replace(/^\/?(api\/)?/, "")}`, window.location.origin);
+  const { query, body, headers, anonymous = false, ...init } = options;
+  const relay = anonymous ? "/api/public" : "/api/backend";
+  const url = new URL(`${relay}/${path.replace(/^\/?(api\/)?/, "")}`, window.location.origin);
   for (const [key, value] of Object.entries(query ?? {})) {
     if (value !== undefined && value !== null) url.searchParams.set(key, String(value));
   }
@@ -61,7 +72,7 @@ export async function apiClient<T = unknown>(
   const errorBody = await parseBody<ApiErrorBody | null>(response).catch(() => null);
   const error = new ApiError(response.status, errorBody);
 
-  if (response.status === 401) {
+  if (response.status === 401 && !anonymous) {
     useSessionStore.getState().clear();
     const next = `${window.location.pathname}${window.location.search}`;
     // Rechargement complet voulu : il vide tous les caches (TanStack Query, stores) après une déconnexion.

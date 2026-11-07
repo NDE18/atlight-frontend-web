@@ -1,12 +1,20 @@
+import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
+import { Suspense } from "react";
+import { RegisterWizard } from "@/features/auth/components/register/register-wizard";
+import { safeNextPath } from "@/shared/utils/safe-next";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations();
+  return { title: t("signUp") };
+}
 
 // Inscription en 4 étapes : Rôle, Identité, Compte, Code (AUTH-01, AUTH-02 — cahier des charges 4.1.1).
-export default async function RegisterPage() {
-  const t = await getTranslations();
+export default async function RegisterPage({ searchParams }: PageProps<"/register">) {
+  const { next } = await searchParams;
   return (
-    <main className="mx-auto flex min-h-dvh max-w-md flex-col justify-center p-4">
-      <h1 className="text-primary text-2xl font-bold">atlight</h1>
-      <p className="text-grey-700 mt-2">{t("signUp")}</p>
-    </main>
+    <Suspense>
+      <RegisterWizard next={safeNextPath(typeof next === "string" ? next : null)} />
+    </Suspense>
   );
 }

@@ -15,7 +15,7 @@
     "test:e2e": "playwright test",
     "i18n:sync": "node scripts/arb-to-json.mjs",
     "i18n:check": "node scripts/arb-to-json.mjs --check",
-    "ci": "npm run i18n:check && npm run lint && npm run typecheck && npm run test && npm run build"
+    "ci": "npm run i18n:check && npm run format:check && npm run lint && npm run typecheck && npm run test && npm run build"
   },
   "dependencies": {
     "@hookform/resolvers": "^7.0.3",
